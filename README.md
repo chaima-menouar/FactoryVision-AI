@@ -51,28 +51,36 @@ Azure deployment (cloud phase)
 
 ```text
 backend/        FastAPI service
-ml/             training/inference code and experiment configuration
+ml/             hosted training code, inference code and experiment configuration
 frontend/       React/Vite dashboard
-scripts/        data preparation utilities
+scripts/        data validation/preparation utilities
 data/           dataset documentation only (raw data ignored)
-docs/           architecture and roadmap
+docs/           architecture and Kaggle training runbook
 tests/          backend tests
 .github/        CI workflows
 ```
 
 ## Planned phases
 
-1. **Foundation & data pipeline** — repository structure, reproducible dataset preparation, baseline API.
-2. **Computer vision baseline** — PatchCore/EfficientAD experiments on MVTec AD using Kaggle GPU/CPU.
+1. **Foundation & data pipeline** — repository structure, reproducible dataset preparation, baseline API. ✅
+2. **Computer vision baseline** — PatchCore experiments on MVTec AD using hosted Kaggle compute. **In progress.**
 3. **Evaluation & explainability** — image/pixel AUROC, F1, anomaly maps, error analysis.
 4. **Backend & persistence** — production inference endpoints, inspection history, metrics.
 5. **Dashboard** — quality KPIs, defect explorer, inspection detail view.
 6. **AI Copilot** — grounded assistant over inspection history and quality documentation.
 7. **Azure cloud phase** — containerization, Azure-hosted API/app/database/storage, monitoring and CI/CD.
 
+## Hosted baseline
+
+The reproducible PatchCore entrypoint is available at `ml/train_patchcore.py`. Hosted ML dependencies are isolated in `ml/requirements-ml.txt`, and the Kaggle procedure is documented in `docs/TRAINING_KAGGLE.md`.
+
+First categories: `bottle`, `cable`, `metal_nut`, `transistor`, `zipper`.
+
+No model metric will be published in this repository until it comes from an actual training/evaluation run.
+
 ## Current status
 
-**v0.1 foundation started.** The initial codebase, data preparation workflow, API contract, training configuration and CI are being built directly in this repository.
+**v0.2 — hosted baseline prepared.** The application foundation, MVTec validation workflow, PatchCore training entrypoint, API contract, frontend shell, tests and CI are now in place. The next gate is a real hosted MVTec run; after those artifacts exist, the selected model will be connected to the inference API.
 
 ## Important data note
 
