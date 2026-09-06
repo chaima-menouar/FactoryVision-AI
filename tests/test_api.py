@@ -37,6 +37,15 @@ def test_copilot_context_shape():
     assert body['suggested_questions']
 
 
+def test_copilot_ask_requires_configured_provider():
+    response = client.post(
+        '/api/v1/copilot/ask',
+        json={'question': 'Summarize the latest defects.'},
+    )
+    assert response.status_code == 503
+    assert 'not configured' in response.json()['detail'].lower()
+
+
 def test_rejects_non_image_upload():
     response = client.post('/api/v1/inspect', files={'file': ('test.txt', b'hello', 'text/plain')})
     assert response.status_code == 415
