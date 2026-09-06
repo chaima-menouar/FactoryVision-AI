@@ -4,9 +4,15 @@ from PIL import Image
 import io
 import os
 
-from .schemas import HealthResponse, InspectionHistoryResponse, InspectionResponse
+from .schemas import (
+    CopilotContextResponse,
+    HealthResponse,
+    InspectionHistoryResponse,
+    InspectionResponse,
+)
 from .services.inference import AnomalyInferenceService
 from .services.inspection_store import InspectionStore
+from .services.quality_context import QualityContextService
 
 
 def _cors_origins() -> list[str]:
@@ -16,7 +22,7 @@ def _cors_origins() -> list[str]:
 
 app = FastAPI(
     title="FactoryVision AI API",
-    version="0.6.0",
+    version="0.7.0",
     description="Industrial visual anomaly inspection API.",
 )
 
@@ -30,6 +36,7 @@ app.add_middleware(
 
 inference = AnomalyInferenceService()
 store = InspectionStore()
+quality_context = QualityContextService(store)
 
 
 @app.get("/health", response_model=HealthResponse)
@@ -46,6 +53,13 @@ def inspections(
         **summary,
         items=store.list_recent(limit=limit),
     )
+
+
+@app.get("/api/v1/copilot/context", response_model=CopilotContextResponse)
+def copilot_context(
+    limit: int = Query(default=20, ge=1, le=100),
+) -> CopilotContextResponse:
+    return CopilotContextResponse(**quality_context.build(limit=limit))
 
 
 @app.post("/api/v1/inspect", response_model=InspectionResponse)
