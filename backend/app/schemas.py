@@ -13,4 +13,25 @@ class InspectionResponse(BaseModel):
     threshold: float = Field(ge=0.0, le=1.0)
     model_name: str
     model_ready: bool
+    inspection_id: int | None = None
+    created_at: str | None = None
+    localization_base64: str | None = None
     note: str | None = None
+
+
+class InspectionHistoryItem(BaseModel):
+    id: int
+    filename: str
+    predicted_label: str
+    anomaly_score: float
+    threshold: float
+    model_name: str
+    created_at: str
+
+
+class InspectionHistoryResponse(BaseModel):
+    total: int
+    anomalous: int
+    normal: int
+    defect_rate: float = Field(ge=0.0, le=1.0)
+    items: list[InspectionHistoryItem]
