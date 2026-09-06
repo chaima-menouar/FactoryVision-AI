@@ -31,6 +31,9 @@ def test_sqlite_store_records_and_summarizes(tmp_path):
     assert len(recent) == 2
     assert recent[0]["filename"] == "defect.png"
 
+    assert store.count_since("2000-01-01T00:00:00+00:00") == 2
+    assert store.count_since("2999-01-01T00:00:00+00:00") == 0
+
     summary = store.summary()
     assert summary == {
         "total": 2,
