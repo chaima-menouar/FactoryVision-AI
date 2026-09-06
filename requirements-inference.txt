@@ -4,3 +4,6 @@
 anomalib==2.6.0
 lightning==2.6.5
 timm>=1.0,<2
+
+# Optional Azure persistence backend used by the cloud deployment.
+azure-cosmos>=4.7,<5
