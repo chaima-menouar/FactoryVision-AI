@@ -4,6 +4,7 @@ from pydantic import BaseModel, Field
 class HealthResponse(BaseModel):
     status: str
     model_ready: bool
+    copilot_ready: bool = False
 
 
 class InspectionResponse(BaseModel):
