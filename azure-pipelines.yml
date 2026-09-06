@@ -1,0 +1,105 @@
+trigger:
+  branches:
+    include:
+      - main
+
+pr:
+  branches:
+    include:
+      - main
+
+variables:
+  pythonVersion: '3.12'
+  nodeVersion: '20.x'
+
+stages:
+  - stage: Validate
+    displayName: Validate model, application and infrastructure
+    jobs:
+      - job: ModelQualityGate
+        displayName: PatchCore release quality gate
+        pool:
+          vmImage: ubuntu-latest
+        steps:
+          - checkout: self
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: $(pythonVersion)
+          - script: python scripts/model_quality_gate.py --json
+            displayName: Validate model metrics and release metadata
+          - script: python ml/log_baseline_mlflow.py --dry-run
+            displayName: Validate MLflow experiment payload
+          - task: PublishPipelineArtifact@1
+            inputs:
+              targetPath: ml
+              artifact: ml-evidence
+            displayName: Publish model evidence
+
+      - job: BackendTests
+        displayName: FastAPI tests
+        pool:
+          vmImage: ubuntu-latest
+        steps:
+          - checkout: self
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: $(pythonVersion)
+          - script: |
+              python -m pip install --upgrade pip
+              pip install -r requirements.txt
+              python -m pytest -q
+            displayName: Run backend and MLOps tests
+
+      - job: FrontendBuild
+        displayName: React production build
+        pool:
+          vmImage: ubuntu-latest
+        steps:
+          - checkout: self
+          - task: NodeTool@0
+            inputs:
+              versionSpec: $(nodeVersion)
+          - script: |
+              cd frontend
+              npm install
+              npm run build
+            displayName: Build Vite frontend
+          - task: PublishPipelineArtifact@1
+            inputs:
+              targetPath: frontend/dist
+              artifact: frontend-dist
+            displayName: Publish frontend build
+
+      - job: InfrastructureValidation
+        displayName: Bicep compile validation
+        pool:
+          vmImage: ubuntu-latest
+        steps:
+          - checkout: self
+          - script: |
+              az bicep install
+              mkdir -p build/infra
+              az bicep build --file infra/main.bicep --outfile build/infra/main.json
+            displayName: Compile Azure Bicep
+          - task: PublishPipelineArtifact@1
+            inputs:
+              targetPath: build/infra
+              artifact: azure-infrastructure
+            displayName: Publish compiled ARM template
+
+  - stage: ReleaseReady
+    displayName: Release readiness
+    dependsOn: Validate
+    condition: succeeded()
+    jobs:
+      - job: Summary
+        displayName: Mark validated release candidate
+        pool:
+          vmImage: ubuntu-latest
+        steps:
+          - checkout: self
+          - script: |
+              echo "FactoryVision release candidate validated."
+              echo "Model: bottle-patchcore-v1"
+              echo "Deployment is intentionally not executed until an Azure subscription is active."
+            displayName: Release readiness summary
