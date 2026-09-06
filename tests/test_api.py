@@ -12,6 +12,17 @@ def test_health():
     assert body['model_ready'] is False
 
 
+def test_inspection_history_shape():
+    response = client.get('/api/v1/inspections?limit=5')
+    assert response.status_code == 200
+    body = response.json()
+    assert body['total'] >= 0
+    assert body['anomalous'] >= 0
+    assert body['normal'] >= 0
+    assert 0.0 <= body['defect_rate'] <= 1.0
+    assert isinstance(body['items'], list)
+
+
 def test_rejects_non_image_upload():
     response = client.post('/api/v1/inspect', files={'file': ('test.txt', b'hello', 'text/plain')})
     assert response.status_code == 415
