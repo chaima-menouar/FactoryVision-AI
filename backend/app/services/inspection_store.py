@@ -101,6 +101,14 @@ class SQLiteInspectionStore:
             ).fetchall()
         return [dict(row) for row in rows]
 
+    def count_since(self, since_iso: str) -> int:
+        with self._connect() as connection:
+            row = connection.execute(
+                "SELECT COUNT(*) AS total FROM inspections WHERE created_at >= ?",
+                (since_iso,),
+            ).fetchone()
+        return int(row["total"] or 0)
+
     def summary(self) -> dict[str, float | int]:
         with self._connect() as connection:
             row = connection.execute(
@@ -215,6 +223,14 @@ class CosmosInspectionStore:
         )
         return list(itertools.islice(items, safe_limit))
 
+    def count_since(self, since_iso: str) -> int:
+        values = self.container.query_items(
+            query="SELECT VALUE COUNT(1) FROM c WHERE c.created_at >= @since",
+            parameters=[{"name": "@since", "value": since_iso}],
+            enable_cross_partition_query=True,
+        )
+        return int(next(iter(values), 0) or 0)
+
     def _count(self, where_clause: str = "") -> int:
         query = f"SELECT VALUE COUNT(1) FROM c {where_clause}".strip()
         values = self.container.query_items(
@@ -262,6 +278,9 @@ class InspectionStore:
 
     def list_recent(self, limit: int = 25) -> list[dict[str, Any]]:
         return self._store.list_recent(limit=limit)
+
+    def count_since(self, since_iso: str) -> int:
+        return self._store.count_since(since_iso)
 
     def summary(self) -> dict[str, float | int]:
         return self._store.summary()
