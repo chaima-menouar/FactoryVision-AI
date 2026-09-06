@@ -45,3 +45,14 @@ class CopilotContextResponse(BaseModel):
     average_anomaly_score: float = Field(ge=0.0, le=1.0)
     recent_anomalies: list[InspectionHistoryItem]
     suggested_questions: list[str]
+
+
+class CopilotQuestion(BaseModel):
+    question: str = Field(min_length=3, max_length=1000)
+
+
+class CopilotAnswerResponse(BaseModel):
+    answer: str
+    provider: str
+    evidence_total: int
+    evidence_anomalous: int
