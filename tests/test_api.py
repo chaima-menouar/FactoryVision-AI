@@ -14,6 +14,19 @@ def test_health():
     assert body['model_ready'] is False
 
 
+def test_model_ops_exposes_validated_release_evidence():
+    response = client.get('/api/v1/model-ops')
+    assert response.status_code == 200
+    body = response.json()
+    assert body['release_id'] == 'bottle-patchcore-v1'
+    assert body['category'] == 'bottle'
+    assert body['quality_gate_status'] == 'pass'
+    assert body['experiment_tracking'] == 'MLflow'
+    assert body['infrastructure_as_code'] == 'Bicep'
+    assert body['azure_deployment_state'] == 'infrastructure-ready'
+    assert body['release_image_auroc'] >= 0.99
+
+
 def test_inspection_history_shape():
     response = client.get('/api/v1/inspections?limit=5')
     assert response.status_code == 200
