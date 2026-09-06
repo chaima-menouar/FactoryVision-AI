@@ -53,7 +53,7 @@ Azure deployment (cloud phase)
 backend/        FastAPI service
 ml/             hosted training code, inference code and experiment configuration
 frontend/       React/Vite dashboard
-scripts/        data validation/preparation utilities
+scripts/        data validation, smoke-test and model packaging utilities
 data/           dataset documentation only (raw data ignored)
 docs/           architecture and Kaggle training runbook
 tests/          backend tests
@@ -64,9 +64,9 @@ tests/          backend tests
 
 1. **Foundation & data pipeline** — repository structure, reproducible dataset preparation, baseline API. ✅
 2. **Computer vision baseline** — PatchCore experiments on MVTec AD using hosted Kaggle compute. ✅
-3. **Evaluation & explainability** — image/pixel AUROC, F1, anomaly maps, error analysis. **In progress.**
-4. **Backend & persistence** — production inference endpoints, inspection history, metrics.
-5. **Dashboard** — quality KPIs, defect explorer, inspection detail view.
+3. **Evaluation & explainability** — image/pixel AUROC, F1, anomaly maps, error analysis. ✅
+4. **Backend & persistence** — real PatchCore inference connected; inspection history and persistence are next. **In progress.**
+5. **Dashboard** — live image upload and prediction UI connected to the API; quality history/KPIs remain. **In progress.**
 6. **AI Copilot** — grounded assistant over inspection history and quality documentation.
 7. **Azure cloud phase** — containerization, Azure-hosted API/app/database/storage, monitoring and CI/CD.
 
@@ -95,11 +95,19 @@ Mean metrics across the five categories:
 
 The machine-readable summary is stored in `ml/results/patchcore_mvtec_baseline.csv`. Large checkpoints and raw dataset files remain outside GitHub.
 
-Initial interpretation: image-level anomaly detection is consistently strong across all five categories, while pixel-level F1 varies more substantially. `metal_nut` currently has the strongest localization F1, while `zipper` is the main localization failure-analysis target. These findings will be validated visually with anomaly maps before a production baseline is selected.
+Qualitative review confirmed that PatchCore localizes representative `bottle` and `zipper` defects in the correct regions. Zipper anomaly maps are broader than the ground-truth masks, which is consistent with its lower pixel F1.
+
+## Real API inference milestone
+
+The selected `bottle` PatchCore checkpoint was independently restored and then exercised through the FastAPI endpoint. The API returned a real anomalous prediction for `broken_small/000.png` with an anomaly score of `0.64147`, while `/health` reported `model_ready: true`.
+
+The frontend now supports a live image upload flow against `/api/v1/inspect`. The backend checkpoint path is configured through `FACTORYVISION_MODEL_CHECKPOINT`.
+
+Use `scripts/package_model_release.py` to create a portable model archive containing the checkpoint plus a SHA-256 manifest before leaving the hosted notebook session.
 
 ## Current status
 
-**v0.4 — five-category hosted baseline completed.** The baseline stage is complete with real Kaggle measurements across five MVTec AD categories. The project is now in evaluation and explainability: inspect anomaly heatmaps and failure cases, decide whether PatchCore is sufficient or should be compared with another detector, export the selected model artifact, and connect it to the inference API.
+**v0.5 — real model inference connected end to end.** The project has moved from model experimentation into product integration: real MVTec evaluation, qualitative anomaly-map review, independent checkpoint restoration, FastAPI inference and the live React inspection workspace are now in place. Next: preserve the selected model release artifact, add inspection persistence/history and expose localization output to the product UI before the Azure phase.
 
 ## Important data note
 
