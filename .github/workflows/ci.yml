@@ -12,7 +12,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: '3.12'
       - run: pip install -r requirements.txt
       - run: python -m pytest -q
 
@@ -28,3 +28,19 @@ jobs:
           node-version: '20'
       - run: npm install
       - run: npm run build
+
+  mlops-gates:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate model promotion gate
+        run: python scripts/model_quality_gate.py --json
+      - name: Validate MLflow experiment payload
+        run: python ml/log_baseline_mlflow.py --dry-run
+      - name: Compile Azure Bicep
+        run: |
+          az bicep install
+          az bicep build --file infra/main.bicep --outfile /tmp/factoryvision-main.json
