@@ -1,0 +1,14 @@
+using './main.bicep'
+
+param location = 'westeurope'
+param cosmosLocationName = 'West Europe'
+param staticWebAppName = 'factoryvision-web'
+param containerEnvironmentName = 'factoryvision-env'
+param containerAppName = 'factoryvision-api'
+param containerImage = 'ghcr.io/chaima-menouar/factoryvision-ai:azure-latest'
+
+// Keep false until the verified image exists in GHCR and the Azure subscription is active.
+param deployBackend = false
+
+param dailyInspectionLimit = 25
+param maxUploadBytes = 6291456
