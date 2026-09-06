@@ -1,7 +1,9 @@
 from fastapi.testclient import TestClient
-from backend.app.main import app
 
-client = TestClient(app)
+from backend.app import main as main_module
+
+
+client = TestClient(main_module.app)
 
 
 def test_health():
@@ -49,3 +51,29 @@ def test_copilot_ask_requires_configured_provider():
 def test_rejects_non_image_upload():
     response = client.post('/api/v1/inspect', files={'file': ('test.txt', b'hello', 'text/plain')})
     assert response.status_code == 415
+
+
+def test_rejects_image_larger_than_configured_limit(monkeypatch):
+    monkeypatch.setenv('FACTORYVISION_DAILY_INSPECTION_LIMIT', '0')
+    monkeypatch.setenv('FACTORYVISION_MAX_UPLOAD_BYTES', '10')
+
+    response = client.post(
+        '/api/v1/inspect',
+        files={'file': ('large.png', b'01234567890', 'image/png')},
+    )
+
+    assert response.status_code == 413
+    assert 'size limit' in response.json()['detail'].lower()
+
+
+def test_daily_inspection_limit_fails_closed(monkeypatch):
+    monkeypatch.setenv('FACTORYVISION_DAILY_INSPECTION_LIMIT', '1')
+    monkeypatch.setattr(main_module.store, 'count_since', lambda _: 1)
+
+    response = client.post(
+        '/api/v1/inspect',
+        files={'file': ('inspection.png', b'not-read-because-quota-is-full', 'image/png')},
+    )
+
+    assert response.status_code == 429
+    assert 'zero-cost' in response.json()['detail'].lower()
