@@ -64,7 +64,7 @@ tests/          backend tests
 
 1. **Foundation & data pipeline** — repository structure, reproducible dataset preparation, baseline API. ✅
 2. **Computer vision baseline** — PatchCore experiments on MVTec AD using hosted Kaggle compute. **In progress.**
-3. **Evaluation & explainability** — image/pixel AUROC, F1, anomaly maps, error analysis.
+3. **Evaluation & explainability** — image/pixel AUROC, F1, anomaly maps, error analysis. **Started.**
 4. **Backend & persistence** — production inference endpoints, inspection history, metrics.
 5. **Dashboard** — quality KPIs, defect explorer, inspection detail view.
 6. **AI Copilot** — grounded assistant over inspection history and quality documentation.
@@ -76,11 +76,22 @@ The reproducible PatchCore entrypoint is available at `ml/train_patchcore.py`. H
 
 First categories: `bottle`, `cable`, `metal_nut`, `transistor`, `zipper`.
 
-No model metric will be published in this repository until it comes from an actual training/evaluation run.
+### First real result — MVTec AD / bottle
+
+A real Kaggle run using PatchCore on the `bottle` category completed successfully:
+
+| Metric | Result |
+|---|---:|
+| Image AUROC | 1.0000 |
+| Image F1 | 0.9920 |
+| Pixel AUROC | 0.9856 |
+| Pixel F1 | 0.7263 |
+
+The exact machine-readable result is stored in `ml/results/bottle_patchcore_metrics.json`. Large checkpoints and raw dataset files remain outside GitHub.
 
 ## Current status
 
-**v0.2 — hosted baseline prepared.** The application foundation, MVTec validation workflow, PatchCore training entrypoint, API contract, frontend shell, tests and CI are now in place. The next gate is a real hosted MVTec run; after those artifacts exist, the selected model will be connected to the inference API.
+**v0.3 — first real hosted baseline completed.** The application foundation, MVTec validation workflow, PatchCore training entrypoint, API contract, frontend shell, tests and CI are in place, and the first real `bottle` baseline has been trained and evaluated on Kaggle. Next: run the remaining selected categories, inspect anomaly maps and failure cases, select the production baseline, then connect the selected artifact to the inference API.
 
 ## Important data note
 
