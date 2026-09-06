@@ -20,6 +20,7 @@ artifacts/
 outputs/
 mlruns/
 wandb/
+factoryvision-*-release.zip
 
 # Runtime persistence
 runtime/
