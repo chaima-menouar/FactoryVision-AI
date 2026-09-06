@@ -17,10 +17,12 @@ from .schemas import (
     HealthResponse,
     InspectionHistoryResponse,
     InspectionResponse,
+    ModelOpsResponse,
 )
 from .services.copilot import CopilotNotConfiguredError, QualityCopilotService
 from .services.inference import AnomalyInferenceService
 from .services.inspection_store import InspectionStore
+from .services.model_ops import ModelOpsService
 from .services.quality_context import QualityContextService
 
 
@@ -55,8 +57,8 @@ def _utc_day_start_iso() -> str:
 
 app = FastAPI(
     title="FactoryVision AI API",
-    version="0.9.0",
-    description="Industrial visual anomaly inspection API.",
+    version="1.0.0",
+    description="Industrial visual anomaly inspection and MLOps evidence API.",
 )
 
 app.add_middleware(
@@ -71,6 +73,7 @@ inference = AnomalyInferenceService()
 store = InspectionStore()
 quality_context = QualityContextService(store)
 copilot = QualityCopilotService()
+model_ops = ModelOpsService()
 
 
 @app.get("/health", response_model=HealthResponse)
@@ -80,6 +83,11 @@ def health() -> HealthResponse:
         model_ready=inference.model_ready,
         copilot_ready=copilot.ready,
     )
+
+
+@app.get("/api/v1/model-ops", response_model=ModelOpsResponse)
+def model_operations() -> ModelOpsResponse:
+    return ModelOpsResponse(**model_ops.snapshot())
 
 
 @app.get("/api/v1/inspections", response_model=InspectionHistoryResponse)
