@@ -63,8 +63,8 @@ tests/          backend tests
 ## Planned phases
 
 1. **Foundation & data pipeline** — repository structure, reproducible dataset preparation, baseline API. ✅
-2. **Computer vision baseline** — PatchCore experiments on MVTec AD using hosted Kaggle compute. **In progress.**
-3. **Evaluation & explainability** — image/pixel AUROC, F1, anomaly maps, error analysis. **Started.**
+2. **Computer vision baseline** — PatchCore experiments on MVTec AD using hosted Kaggle compute. ✅
+3. **Evaluation & explainability** — image/pixel AUROC, F1, anomaly maps, error analysis. **In progress.**
 4. **Backend & persistence** — production inference endpoints, inspection history, metrics.
 5. **Dashboard** — quality KPIs, defect explorer, inspection detail view.
 6. **AI Copilot** — grounded assistant over inspection history and quality documentation.
@@ -74,24 +74,32 @@ tests/          backend tests
 
 The reproducible PatchCore entrypoint is available at `ml/train_patchcore.py`. Hosted ML dependencies are isolated in `ml/requirements-ml.txt`, and the Kaggle procedure is documented in `docs/TRAINING_KAGGLE.md`.
 
-First categories: `bottle`, `cable`, `metal_nut`, `transistor`, `zipper`.
+The first baseline covers `bottle`, `cable`, `metal_nut`, `transistor`, and `zipper`.
 
-### First real result — MVTec AD / bottle
+### Real PatchCore baseline results
 
-A real Kaggle run using PatchCore on the `bottle` category completed successfully:
+| Category | Image AUROC | Image F1 | Pixel AUROC | Pixel F1 |
+|---|---:|---:|---:|---:|
+| bottle | 1.0000 | 0.9920 | 0.9856 | 0.7263 |
+| cable | 0.9829 | 0.9674 | 0.9847 | 0.6393 |
+| metal_nut | 0.9971 | 0.9838 | 0.9867 | 0.8384 |
+| transistor | 0.9958 | 0.9500 | 0.9740 | 0.6131 |
+| zipper | 0.9753 | 0.9791 | 0.9814 | 0.5422 |
 
-| Metric | Result |
-|---|---:|
-| Image AUROC | 1.0000 |
-| Image F1 | 0.9920 |
-| Pixel AUROC | 0.9856 |
-| Pixel F1 | 0.7263 |
+Mean metrics across the five categories:
 
-The exact machine-readable result is stored in `ml/results/bottle_patchcore_metrics.json`. Large checkpoints and raw dataset files remain outside GitHub.
+- Image AUROC: **0.9902**
+- Image F1: **0.9745**
+- Pixel AUROC: **0.9825**
+- Pixel F1: **0.6719**
+
+The machine-readable summary is stored in `ml/results/patchcore_mvtec_baseline.csv`. Large checkpoints and raw dataset files remain outside GitHub.
+
+Initial interpretation: image-level anomaly detection is consistently strong across all five categories, while pixel-level F1 varies more substantially. `metal_nut` currently has the strongest localization F1, while `zipper` is the main localization failure-analysis target. These findings will be validated visually with anomaly maps before a production baseline is selected.
 
 ## Current status
 
-**v0.3 — first real hosted baseline completed.** The application foundation, MVTec validation workflow, PatchCore training entrypoint, API contract, frontend shell, tests and CI are in place, and the first real `bottle` baseline has been trained and evaluated on Kaggle. Next: run the remaining selected categories, inspect anomaly maps and failure cases, select the production baseline, then connect the selected artifact to the inference API.
+**v0.4 — five-category hosted baseline completed.** The baseline stage is complete with real Kaggle measurements across five MVTec AD categories. The project is now in evaluation and explainability: inspect anomaly heatmaps and failure cases, decide whether PatchCore is sufficient or should be compared with another detector, export the selected model artifact, and connect it to the inference API.
 
 ## Important data note
 
