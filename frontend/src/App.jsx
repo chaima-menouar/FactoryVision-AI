@@ -1,5 +1,17 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Activity, AlertTriangle, Boxes, CheckCircle2, History, ScanSearch, UploadCloud } from 'lucide-react'
+import {
+  Activity,
+  AlertTriangle,
+  Boxes,
+  CheckCircle2,
+  Cloud,
+  GitBranch,
+  History,
+  ScanSearch,
+  ShieldCheck,
+  UploadCloud,
+  Workflow,
+} from 'lucide-react'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'
 
@@ -11,9 +23,28 @@ const emptyHistory = {
   items: [],
 }
 
+const emptyModelOps = {
+  release_id: null,
+  category: null,
+  model_name: null,
+  checkpoint_sha256: null,
+  quality_gate_status: 'checking',
+  release_image_auroc: null,
+  release_pixel_auroc: null,
+  mean_image_auroc: null,
+  mean_pixel_auroc: null,
+  experiment_tracking: 'MLflow',
+  ci_cd: 'GitHub Actions + Azure DevOps',
+  infrastructure_as_code: 'Bicep',
+  container_registry: 'GitHub Container Registry',
+  azure_target: 'Azure Static Web Apps + Container Apps + Cosmos DB',
+  azure_deployment_state: 'infrastructure-ready',
+}
+
 export default function App() {
   const [health, setHealth] = useState({ status: 'checking', model_ready: false })
   const [history, setHistory] = useState(emptyHistory)
+  const [modelOps, setModelOps] = useState(emptyModelOps)
   const [file, setFile] = useState(null)
   const [previewUrl, setPreviewUrl] = useState('')
   const [result, setResult] = useState(null)
@@ -28,6 +59,17 @@ export default function App() {
       setHistory(payload)
     } catch {
       // History is supplementary; health status handles API availability.
+    }
+  }
+
+  async function loadModelOps() {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/v1/model-ops`)
+      if (!response.ok) return
+      const payload = await response.json()
+      setModelOps(payload)
+    } catch {
+      setModelOps((current) => ({ ...current, quality_gate_status: 'unavailable' }))
     }
   }
 
@@ -47,6 +89,7 @@ export default function App() {
       })
 
     loadHistory()
+    loadModelOps()
 
     return () => {
       active = false
@@ -69,6 +112,8 @@ export default function App() {
     return `${(history.defect_rate * 100).toFixed(1)}%`
   }, [history])
 
+  const releaseGate = modelOps.quality_gate_status === 'pass' ? 'Passed' : modelOps.quality_gate_status
+
   const metrics = [
     { label: 'Inspections', value: history.total || '—', icon: Boxes },
     { label: 'Defect rate', value: defectRate, icon: AlertTriangle },
@@ -77,6 +122,7 @@ export default function App() {
       value: health.model_ready ? 'PatchCore ready' : health.status === 'offline' ? 'API offline' : 'Model not ready',
       icon: Activity,
     },
+    { label: 'Release gate', value: releaseGate || '—', icon: ShieldCheck },
   ]
 
   function handleFileChange(event) {
@@ -122,11 +168,11 @@ export default function App() {
         <div>
           <p className="eyebrow">INDUSTRIAL QUALITY INTELLIGENCE</p>
           <h1>FactoryVision AI</h1>
-          <p className="subtitle">Visual defect detection, localization, analytics and an AI quality copilot.</p>
+          <p className="subtitle">Visual defect detection, localization, analytics and an auditable MLOps release workflow.</p>
         </div>
         <div className={`status ${health.model_ready ? 'status-ready' : ''}`}>
           <span className="status-dot" />
-          v0.6 · Inspection intelligence
+          v1.0 · MLOps release ready
         </div>
       </header>
 
@@ -158,7 +204,7 @@ export default function App() {
               <div className="dropzone-empty">
                 <UploadCloud size={34} />
                 <strong>Select a product image</strong>
-                <span>PNG, JPG or JPEG</span>
+                <span>PNG, JPG or JPEG · max 6 MB</span>
               </div>
             )}
           </label>
@@ -223,6 +269,41 @@ export default function App() {
               </dl>
             </div>
           )}
+        </div>
+      </section>
+
+      <section className="panel mlops-panel">
+        <div className="panel-heading">
+          <div>
+            <p className="section-kicker">MODEL OPERATIONS</p>
+            <h2>Release & MLOps evidence</h2>
+          </div>
+          <Workflow size={28} />
+        </div>
+
+        <div className="mlops-grid">
+          <div className="mlops-release">
+            <div className={`gate-pill ${modelOps.quality_gate_status === 'pass' ? 'gate-pass' : ''}`}>
+              <ShieldCheck size={16} />
+              Quality gate: {modelOps.quality_gate_status}
+            </div>
+            <h3>{modelOps.release_id || 'Release metadata unavailable'}</h3>
+            <p>{modelOps.model_name || 'PatchCore'} · {modelOps.category || 'category pending'}</p>
+            <dl className="mlops-details">
+              <div><dt>Release image AUROC</dt><dd>{modelOps.release_image_auroc != null ? Number(modelOps.release_image_auroc).toFixed(4) : '—'}</dd></div>
+              <div><dt>Release pixel AUROC</dt><dd>{modelOps.release_pixel_auroc != null ? Number(modelOps.release_pixel_auroc).toFixed(4) : '—'}</dd></div>
+              <div><dt>Mean image AUROC</dt><dd>{modelOps.mean_image_auroc != null ? Number(modelOps.mean_image_auroc).toFixed(4) : '—'}</dd></div>
+              <div><dt>Mean pixel AUROC</dt><dd>{modelOps.mean_pixel_auroc != null ? Number(modelOps.mean_pixel_auroc).toFixed(4) : '—'}</dd></div>
+            </dl>
+          </div>
+
+          <div className="mlops-stack">
+            <div className="stack-item"><GitBranch size={18} /><span><strong>CI/CD</strong>{modelOps.ci_cd}</span></div>
+            <div className="stack-item"><Activity size={18} /><span><strong>Experiment tracking</strong>{modelOps.experiment_tracking}</span></div>
+            <div className="stack-item"><Boxes size={18} /><span><strong>Container registry</strong>{modelOps.container_registry}</span></div>
+            <div className="stack-item"><Cloud size={18} /><span><strong>Azure target</strong>{modelOps.azure_target}</span></div>
+            <div className="stack-item"><ShieldCheck size={18} /><span><strong>Deployment state</strong>{modelOps.azure_deployment_state}</span></div>
+          </div>
         </div>
       </section>
 
