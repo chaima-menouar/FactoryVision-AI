@@ -2,10 +2,17 @@ from fastapi import FastAPI, File, UploadFile, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from PIL import Image
 import io
+import os
 
 from .schemas import HealthResponse, InspectionHistoryResponse, InspectionResponse
 from .services.inference import AnomalyInferenceService
 from .services.inspection_store import InspectionStore
+
+
+def _cors_origins() -> list[str]:
+    raw = os.getenv("FACTORYVISION_CORS_ORIGINS", "http://localhost:5173")
+    return [origin.strip() for origin in raw.split(",") if origin.strip()]
+
 
 app = FastAPI(
     title="FactoryVision AI API",
@@ -15,7 +22,7 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=_cors_origins(),
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
