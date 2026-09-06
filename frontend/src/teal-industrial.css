@@ -1,0 +1,153 @@
+/* FactoryVision AI — calm graphite + muted teal identity.
+   Loaded last so it only replaces the previous warm/orange accent system. */
+
+:root {
+  --cyan: #78b8b5;
+  --blue: #669f9f;
+  --violet: #789899;
+  --magenta: #82aaa6;
+  --pink: #8cb8b2;
+  --green: #8fb8a0;
+  --line: rgba(126, 177, 174, .14);
+}
+
+.fv-app {
+  background:
+    radial-gradient(circle at 76% 8%, rgba(91, 147, 145, .075), transparent 31%),
+    radial-gradient(circle at 13% 24%, rgba(117, 143, 141, .045), transparent 28%),
+    linear-gradient(180deg, #101315 0%, #15191b 48%, #0d1012 100%);
+}
+
+.fv-grid {
+  background-image:
+    linear-gradient(rgba(119, 170, 168, .032) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(119, 170, 168, .032) 1px, transparent 1px);
+}
+
+.fv-aurora-a { background: radial-gradient(circle, rgba(80, 145, 143, .17), rgba(80,145,143,.025) 52%, transparent 72%); }
+.fv-aurora-b { background: radial-gradient(circle, rgba(104, 139, 136, .12), rgba(104,139,136,.02) 62%, transparent 74%); }
+.fv-aurora-c { background: radial-gradient(circle, rgba(71, 126, 128, .10), rgba(71,126,128,.018) 58%, transparent 74%); }
+
+.fv-star { background: #89b9b5; box-shadow: 0 0 7px rgba(137,185,181,.24); }
+.fv-star-2,.fv-star-5,.fv-star-4,.fv-star-8 { background: #a7b1af; box-shadow: 0 0 6px rgba(167,177,175,.18); }
+.fv-beam { background: linear-gradient(90deg, transparent, #739f9d, #879a98, transparent); }
+
+.fv-nav,
+.fv-hero,
+.fv-panel,
+.fv-stat,
+.fv-feature-strip,
+.fv-release-card,
+.fv-pipeline-node,
+.fv-benchmark-row > div,
+.fv-history-row,
+.fv-holo-box,
+.fv-detect-card,
+.fv-product-chip {
+  border-color: rgba(121, 170, 167, .12) !important;
+}
+
+.fv-brand-mark {
+  color: #8bbebb;
+  background: linear-gradient(145deg, rgba(105, 164, 161, .11), rgba(111, 128, 126, .07));
+  border-color: rgba(133, 188, 184, .22);
+}
+.fv-brand b {
+  background: linear-gradient(100deg, #a6cfcc, #78aaa7 60%, #9aa9a6);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+.fv-nav-links a::after {
+  background: linear-gradient(90deg, #7eafac, #98aaa7);
+  box-shadow: 0 0 6px rgba(126,175,172,.18);
+}
+
+.fv-nav-cta,
+.fv-btn-primary,
+.fv-analyze-btn {
+  color: #0c1515;
+  background: linear-gradient(135deg, #9bc8c4, #75aaa7 62%, #688f8e 100%);
+  box-shadow: 0 10px 24px rgba(65, 119, 117, .14);
+}
+.fv-nav-cta:hover,
+.fv-btn-primary:hover,
+.fv-analyze-btn:hover:not(:disabled) {
+  box-shadow: 0 13px 28px rgba(65,119,117,.19);
+}
+
+.fv-preview-note svg,
+.fv-kicker,
+.fv-panel-head > div > span,
+.fv-rail-title,
+.fv-card-head,
+.fv-chart-head span,
+.fv-release-card > div > span,
+.fv-benchmark-row span {
+  color: #83aaa7 !important;
+}
+
+.fv-hero {
+  background:
+    radial-gradient(circle at 66% 48%, rgba(90, 143, 141, .055), transparent 35%),
+    linear-gradient(135deg, rgba(21,24,27,.97), rgba(15,18,20,.95) 52%, rgba(22,24,26,.96));
+}
+.fv-hero::before { background: linear-gradient(112deg, transparent 0 38%, rgba(121,172,169,.024) 50%, transparent 62%); }
+.fv-hero::after { background: linear-gradient(90deg, transparent, rgba(108,158,155,.20), rgba(142,154,151,.13), transparent); }
+.fv-kicker span { background: linear-gradient(90deg, #78a8a5, #899996); box-shadow: none; }
+.fv-hero-copy h1 em {
+  background: linear-gradient(90deg, #afd4d1 0%, #7caeab 52%, #9ba9a7 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+.fv-tech-line i { background: #7fa7a4; }
+
+.fv-scanner-scene::before { background: radial-gradient(circle, rgba(84,139,137,.07), rgba(105,126,123,.03) 44%, transparent 70%); }
+.fv-machine-top { border-color: rgba(127,176,172,.18); }
+.fv-machine-top::before,.fv-machine-top::after {
+  background: linear-gradient(90deg, #7dacaa, #7d9290);
+  box-shadow: 0 0 8px rgba(125,172,170,.18);
+}
+.fv-machine-top svg { color: #8cb8b5; }
+.fv-lens {
+  background: radial-gradient(ellipse,#111416 10%,#242a2b 52%,#384d4c 70%,#101314 76%);
+  border-color: rgba(125,181,177,.42);
+  box-shadow: 0 0 9px rgba(105,164,160,.16), 0 16px 45px rgba(0,0,0,.44);
+}
+.fv-lens::before,.fv-lens::after { border-color: rgba(121,165,162,.26); }
+
+.fv-product-chip.is-selected,
+.fv-example-grid button.active {
+  background: linear-gradient(145deg, rgba(99,154,151,.095), rgba(112,128,125,.045)) !important;
+  border-color: rgba(125,174,171,.25) !important;
+}
+
+.fv-product-chip.is-selected svg,
+.fv-example-grid button.active svg,
+.fv-product-thumb svg,
+.fv-empty-stage svg,
+.fv-card-product svg,
+.fv-hero-product {
+  color: #82aaa7 !important;
+}
+
+.fv-orbit-ring,
+.fv-preview-rings span,
+.fv-radar i,
+.fv-reticle,
+.fv-result-target {
+  border-color: rgba(120,166,163,.22) !important;
+}
+
+.fv-dropzone { border-color: rgba(120,166,163,.14) !important; }
+.fv-dropzone:hover {
+  border-color: rgba(122,174,170,.27) !important;
+  background: rgba(92,145,142,.022) !important;
+}
+
+.fv-quality-chart,
+.fv-gauge-row,
+.fv-history-table { border-color: rgba(120,166,163,.09) !important; }
+
+.fv-line { color: #78a5a2 !important; }
+.fv-signal-bars i { background: linear-gradient(180deg, #82aaa7, #686f6e) !important; }
+.fv-footer { border-color: rgba(120,166,163,.09); }
