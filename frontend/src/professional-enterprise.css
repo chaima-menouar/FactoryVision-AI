@@ -1,0 +1,378 @@
+/* FactoryVision AI — Enterprise polish layer
+   Keeps the muted teal palette while reducing decorative UI and improving hierarchy. */
+
+:root {
+  --enterprise-surface: #121619;
+  --enterprise-surface-2: #171c1f;
+  --enterprise-surface-3: #1c2226;
+  --enterprise-border: rgba(132, 174, 171, .13);
+  --enterprise-border-strong: rgba(132, 174, 171, .21);
+  --enterprise-text: #eef3f2;
+  --enterprise-muted: #93a09f;
+  --enterprise-accent: #84b7b3;
+  --enterprise-accent-strong: #9cc9c5;
+}
+
+body {
+  letter-spacing: -.01em;
+  background: #0d1113;
+}
+
+.fv-shell {
+  width: min(1420px, calc(100% - 40px));
+  padding-bottom: 64px;
+}
+
+.fv-nav {
+  top: 14px;
+  width: min(1420px, calc(100% - 40px));
+  min-height: 70px;
+  padding: 12px 16px 12px 18px;
+  border-radius: 16px;
+  border: 1px solid var(--enterprise-border);
+  background: rgba(16, 20, 23, .94);
+  box-shadow: 0 14px 34px rgba(0,0,0,.24);
+}
+
+.fv-brand-mark {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  box-shadow: none;
+}
+
+.fv-brand strong,.fv-brand b { font-size: 16px; }
+.fv-brand small { letter-spacing: .13em; opacity: .82; }
+.fv-nav-links { gap: 24px; }
+.fv-nav-links a { font-size: 12px; font-weight: 650; }
+
+.fv-nav-cta,
+.fv-btn,
+.fv-analyze-btn {
+  border-radius: 10px;
+  box-shadow: none !important;
+  font-weight: 800;
+  letter-spacing: .01em;
+}
+
+.fv-nav-cta:hover,
+.fv-btn:hover,
+.fv-analyze-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.fv-preview-note {
+  margin-top: 14px;
+  font-size: 11px;
+  gap: 7px;
+}
+
+.fv-hero {
+  min-height: 640px;
+  margin-top: 14px;
+  padding: 64px 36px 48px;
+  grid-template-columns: .92fr 1.12fr .5fr;
+  gap: 34px;
+  border-radius: 24px;
+  border: 1px solid var(--enterprise-border);
+  background:
+    radial-gradient(circle at 64% 48%, rgba(105, 158, 155, .045), transparent 32%),
+    linear-gradient(135deg, #171c1f, #111517 54%, #171c1f);
+  box-shadow: 0 24px 60px rgba(0,0,0,.24);
+}
+
+.fv-hero::before { opacity: .34; }
+.fv-hero::after { opacity: .45; }
+
+.fv-kicker {
+  font-size: 9px;
+  letter-spacing: .16em;
+  color: #8fb8b5;
+}
+.fv-kicker span { width: 26px; }
+
+.fv-hero-copy h1 {
+  margin: 20px 0 20px;
+  font-size: clamp(52px, 5vw, 80px);
+  line-height: .96;
+  letter-spacing: -.055em;
+}
+
+.fv-hero-copy h1 em {
+  background: linear-gradient(90deg, #bedbd8, #8eb8b4 58%, #98a9a7);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.fv-hero-copy > p {
+  max-width: 560px;
+  font-size: 15px;
+  line-height: 1.72;
+  color: #9ba7a6;
+}
+
+.fv-hero-actions { margin-top: 26px; gap: 10px; }
+.fv-btn { min-height: 46px; padding: 0 16px; font-size: 12px; }
+.fv-tech-line { margin-top: 26px; gap: 8px; opacity: .88; }
+
+.fv-scanner-scene {
+  min-height: 520px;
+}
+
+.fv-scanner-scene::before {
+  width: 460px;
+  height: 460px;
+  opacity: .75;
+}
+
+.fv-machine {
+  width: 238px;
+  top: 7%;
+}
+.fv-machine-top {
+  height: 86px;
+  border-radius: 16px;
+  box-shadow: 0 18px 38px rgba(0,0,0,.34);
+  letter-spacing: .11em;
+}
+.fv-machine-top::before,.fv-machine-top::after {
+  width: 28px;
+  height: 6px;
+  box-shadow: none;
+}
+
+.fv-lens {
+  width: 138px;
+  height: 58px;
+  box-shadow: 0 12px 30px rgba(0,0,0,.35);
+}
+
+.fv-detect-card {
+  border-radius: 14px !important;
+  backdrop-filter: blur(14px);
+}
+
+.fv-product-rail {
+  gap: 8px;
+}
+.fv-rail-title {
+  margin-bottom: 5px;
+  font-size: 9px;
+  letter-spacing: .13em;
+}
+.fv-product-chip {
+  min-height: 72px;
+  border-radius: 12px !important;
+  padding: 9px 10px;
+  background: rgba(23, 28, 31, .84) !important;
+}
+.fv-product-chip:hover { transform: translateX(2px); }
+.fv-product-chip strong { font-size: 12px; }
+.fv-product-chip small { font-size: 9px; }
+
+.fv-stats {
+  gap: 12px;
+  margin-top: 14px;
+}
+.fv-stat {
+  min-height: 108px;
+  border-radius: 14px !important;
+  padding: 18px;
+  background: #171c1f !important;
+}
+.fv-stat-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+}
+.fv-stat strong { font-size: 24px; }
+.fv-stat span { font-size: 11px; }
+.fv-stat small { font-size: 9px; }
+.fv-stat-glow { display: none; }
+
+.fv-feature-strip {
+  margin-top: 12px;
+  border-radius: 14px !important;
+  padding: 14px 16px;
+  background: #151a1d !important;
+}
+.fv-feature-strip > div { padding: 4px 14px; }
+.fv-feature-strip strong { font-size: 11px; }
+.fv-feature-strip small { font-size: 9px; }
+
+.fv-workspace {
+  gap: 16px;
+  margin-top: 18px;
+}
+
+.fv-panel {
+  border-radius: 18px !important;
+  background: linear-gradient(180deg, #181d20, #14191c) !important;
+  border: 1px solid var(--enterprise-border) !important;
+  box-shadow: 0 16px 36px rgba(0,0,0,.16) !important;
+}
+
+.fv-panel-head {
+  padding-bottom: 18px;
+  margin-bottom: 18px;
+  border-bottom: 1px solid rgba(134, 169, 167, .08);
+}
+.fv-panel-head > div > span {
+  font-size: 9px;
+  letter-spacing: .13em;
+}
+.fv-panel-head h2 {
+  margin-top: 7px;
+  font-size: 22px;
+  letter-spacing: -.025em;
+}
+.fv-panel-head p {
+  margin-top: 6px;
+  font-size: 12px;
+  line-height: 1.55;
+}
+.fv-panel-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 11px;
+}
+
+.fv-dropzone {
+  border-radius: 14px !important;
+  border-style: solid !important;
+  min-height: 330px;
+  background: #111619 !important;
+}
+.fv-dropzone:hover {
+  background: #13191c !important;
+}
+
+.fv-empty-stage strong { font-size: 14px; }
+.fv-empty-stage > span { font-size: 11px; }
+.fv-empty-stage small { font-size: 9px; }
+
+.fv-example-grid {
+  gap: 8px;
+}
+.fv-example-grid button {
+  border-radius: 10px;
+  min-height: 72px;
+  background: #151a1d;
+}
+
+.fv-analyze-btn {
+  min-height: 48px;
+  letter-spacing: .04em;
+}
+
+.fv-result-panel,
+.fv-upload-panel { padding: 24px; }
+
+.fv-awaiting {
+  min-height: 440px;
+  padding: 28px;
+}
+.fv-awaiting h3 { font-size: 19px; }
+.fv-awaiting p { max-width: 420px; }
+
+.fv-result-main,
+.fv-quality-chart,
+.fv-gauge-row,
+.fv-history-table {
+  border-radius: 13px !important;
+}
+
+.fv-result-visual { border-radius: 12px; }
+.fv-result-title strong { font-size: 18px; }
+.fv-result-data dl > div { padding: 11px 0; }
+.fv-result-data dt { font-size: 10px; }
+.fv-result-data dd { font-size: 12px; }
+
+.fv-live-pill,
+.fv-mlops-status,
+.fv-gate-pass,
+.fv-status-bad,
+.fv-defect-label {
+  border-radius: 8px !important;
+  font-size: 9px !important;
+  letter-spacing: .08em;
+}
+
+.fv-mlops {
+  margin-top: 18px;
+  padding: 24px;
+}
+.fv-mlops-grid { gap: 14px; }
+.fv-release-card {
+  border-radius: 14px !important;
+  padding: 18px;
+  background: #151a1d !important;
+}
+.fv-pipeline-map {
+  gap: 8px;
+}
+.fv-pipeline-node {
+  min-height: 66px;
+  border-radius: 12px !important;
+  background: #151a1d !important;
+}
+.fv-pipeline-node strong { font-size: 11px; }
+.fv-pipeline-node small { font-size: 9px; }
+
+.fv-benchmark-row {
+  gap: 10px;
+  margin-top: 14px;
+}
+.fv-benchmark-row > div {
+  border-radius: 12px !important;
+  background: #151a1d !important;
+}
+
+.fv-history {
+  margin-top: 18px;
+  padding: 24px;
+}
+.fv-history-head,
+.fv-history-row {
+  grid-template-columns: .7fr 1.7fr 1fr .8fr .7fr;
+}
+.fv-history-head { font-size: 9px; }
+.fv-history-row {
+  min-height: 56px;
+  border-radius: 9px !important;
+  background: rgba(19,24,27,.78) !important;
+}
+
+.fv-footer {
+  margin-top: 24px;
+  padding-top: 20px;
+  font-size: 10px;
+}
+
+/* Keep motion subtle and purposeful. */
+.fv-star { opacity: .28; }
+.fv-beam { opacity: .07; }
+.fv-aurora { opacity: .13; }
+.fv-orbit-ring { opacity: .45; }
+.fv-holo-box { backdrop-filter: blur(6px); }
+
+@media (max-width: 1100px) {
+  .fv-shell,.fv-nav { width: min(100% - 28px, 1420px); }
+  .fv-hero { grid-template-columns: 1fr; padding: 48px 24px; }
+  .fv-product-rail { display: grid; grid-template-columns: repeat(5, minmax(0,1fr)); }
+}
+
+@media (max-width: 720px) {
+  .fv-shell,.fv-nav { width: min(100% - 20px, 1420px); }
+  .fv-nav { grid-template-columns: 1fr auto; }
+  .fv-nav-links { display: none; }
+  .fv-hero { padding: 38px 18px; border-radius: 18px; }
+  .fv-hero-copy h1 { font-size: clamp(44px, 15vw, 62px); }
+  .fv-product-rail { grid-template-columns: 1fr 1fr; }
+  .fv-stats { grid-template-columns: 1fr 1fr; }
+  .fv-feature-strip { grid-template-columns: 1fr 1fr; }
+  .fv-workspace { grid-template-columns: 1fr; }
+  .fv-panel,.fv-result-panel,.fv-upload-panel,.fv-mlops,.fv-history { padding: 18px; }
+  .fv-history-head { display: none; }
+  .fv-history-row { grid-template-columns: 1fr 1fr; gap: 8px; padding: 12px; }
+}
