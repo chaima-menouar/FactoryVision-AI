@@ -8,11 +8,14 @@ import os
 from pathlib import Path
 
 from .schemas import (
+    CopilotAnswerResponse,
     CopilotContextResponse,
+    CopilotQuestion,
     HealthResponse,
     InspectionHistoryResponse,
     InspectionResponse,
 )
+from .services.copilot import CopilotNotConfiguredError, QualityCopilotService
 from .services.inference import AnomalyInferenceService
 from .services.inspection_store import InspectionStore
 from .services.quality_context import QualityContextService
@@ -29,7 +32,7 @@ def _frontend_dist() -> Path:
 
 app = FastAPI(
     title="FactoryVision AI API",
-    version="0.7.0",
+    version="0.8.0",
     description="Industrial visual anomaly inspection API.",
 )
 
@@ -44,6 +47,7 @@ app.add_middleware(
 inference = AnomalyInferenceService()
 store = InspectionStore()
 quality_context = QualityContextService(store)
+copilot = QualityCopilotService()
 
 
 @app.get("/health", response_model=HealthResponse)
@@ -67,6 +71,29 @@ def copilot_context(
     limit: int = Query(default=20, ge=1, le=100),
 ) -> CopilotContextResponse:
     return CopilotContextResponse(**quality_context.build(limit=limit))
+
+
+@app.post("/api/v1/copilot/ask", response_model=CopilotAnswerResponse)
+def copilot_ask(payload: CopilotQuestion) -> CopilotAnswerResponse:
+    context = quality_context.build(limit=20)
+    try:
+        answer = copilot.answer(payload.question, context)
+    except CopilotNotConfiguredError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+    except httpx.HTTPError as exc:
+        raise HTTPException(
+            status_code=502,
+            detail="The configured copilot provider request failed.",
+        ) from exc
+    except RuntimeError as exc:
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
+
+    return CopilotAnswerResponse(
+        answer=answer,
+        provider=copilot.provider,
+        evidence_total=int(context["total"]),
+        evidence_anomalous=int(context["anomalous"]),
+    )
 
 
 @app.post("/api/v1/inspect", response_model=InspectionResponse)
