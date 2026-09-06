@@ -6,6 +6,7 @@ import './calm-industrial.css'
 import './teal-industrial.css'
 import './professional-enterprise.css'
 import './executive-layout.css'
+import './precision-lab.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
