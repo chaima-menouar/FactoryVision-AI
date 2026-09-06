@@ -1,5 +1,6 @@
 /* FactoryVision AI — calm graphite + muted teal identity.
-   Loaded last so it only replaces the previous warm/orange accent system. */
+   Loaded last so it only replaces the previous warm/orange accent system.
+   redeploy-token: 2026-09-06-teal-v2 */
 
 :root {
   --cyan: #78b8b5;
