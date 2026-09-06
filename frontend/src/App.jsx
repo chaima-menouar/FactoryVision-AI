@@ -2,15 +2,23 @@ import { useEffect, useMemo, useState } from 'react'
 import {
   Activity,
   AlertTriangle,
+  Atom,
   Boxes,
   CheckCircle2,
   Cloud,
+  Cpu,
+  Database,
+  Gauge,
   GitBranch,
   History,
+  Network,
   ScanSearch,
   ShieldCheck,
+  Sparkles,
+  Target,
   UploadCloud,
   Workflow,
+  Zap,
 } from 'lucide-react'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'
@@ -73,6 +81,37 @@ const demoModelOps = {
   azure_deployment_state: 'infrastructure-ready',
 }
 
+function ScientificBackdrop() {
+  return (
+    <div className="science-backdrop" aria-hidden="true">
+      <div className="grid-plane" />
+      <div className="glow glow-a" />
+      <div className="glow glow-b" />
+      <div className="particle particle-1" />
+      <div className="particle particle-2" />
+      <div className="particle particle-3" />
+      <div className="particle particle-4" />
+      <div className="particle particle-5" />
+      <div className="data-line data-line-a" />
+      <div className="data-line data-line-b" />
+    </div>
+  )
+}
+
+function MetricCard({ icon: Icon, label, value, caption, accent = false }) {
+  return (
+    <article className={`metric-card ${accent ? 'metric-card-accent' : ''}`}>
+      <div className="metric-icon"><Icon size={19} /></div>
+      <div className="metric-copy">
+        <span>{label}</span>
+        <strong>{value}</strong>
+        <small>{caption}</small>
+      </div>
+      <span className="metric-pulse" />
+    </article>
+  )
+}
+
 export default function App() {
   const [health, setHealth] = useState(DEMO_MODE ? { status: 'demo', model_ready: true } : { status: 'checking', model_ready: false })
   const [history, setHistory] = useState(DEMO_MODE ? demoHistory : emptyHistory)
@@ -107,8 +146,8 @@ export default function App() {
 
   useEffect(() => {
     if (DEMO_MODE) return undefined
-
     let active = true
+
     fetch(`${API_BASE_URL}/health`)
       .then((response) => {
         if (!response.ok) throw new Error('API health check failed')
@@ -142,12 +181,6 @@ export default function App() {
   }, [history])
 
   const releaseGate = modelOps.quality_gate_status === 'pass' ? 'Passed' : modelOps.quality_gate_status
-  const metrics = [
-    { label: 'Inspections', value: history.total || '—', icon: Boxes },
-    { label: 'Defect rate', value: defectRate, icon: AlertTriangle },
-    { label: 'Model status', value: health.model_ready ? 'PatchCore ready' : health.status === 'offline' ? 'API offline' : 'Model not ready', icon: Activity },
-    { label: 'Release gate', value: releaseGate || '—', icon: ShieldCheck },
-  ]
 
   function handleFileChange(event) {
     const selected = event.target.files?.[0]
@@ -163,7 +196,7 @@ export default function App() {
     setError('')
 
     if (DEMO_MODE) {
-      await new Promise((resolve) => setTimeout(resolve, 650))
+      await new Promise((resolve) => setTimeout(resolve, 900))
       const demoResult = {
         inspection_id: 'D-129',
         filename: file.name,
@@ -204,150 +237,251 @@ export default function App() {
   }
 
   return (
-    <main className="shell">
-      {DEMO_MODE && (
-        <div className="demo-banner">
-          <strong>Static demo preview</strong>
-          <span>Interaction data is simulated for design review. Model release metrics shown below are real benchmark results.</span>
-        </div>
-      )}
+    <div className="app-root">
+      <ScientificBackdrop />
 
-      <header className="hero">
-        <div>
-          <p className="eyebrow">INDUSTRIAL QUALITY INTELLIGENCE</p>
-          <h1>FactoryVision AI</h1>
-          <p className="subtitle">Visual defect detection, localization, analytics and an auditable MLOps release workflow.</p>
-        </div>
-        <div className={`status ${health.model_ready ? 'status-ready' : ''}`}>
-          <span className="status-dot" />
-          {DEMO_MODE ? 'v1.0 · Preview environment' : 'v1.0 · MLOps release ready'}
-        </div>
-      </header>
-
-      <section className="metrics">
-        {metrics.map(({ label, value, icon: Icon }) => (
-          <article className="card" key={label}>
-            <Icon size={20} />
-            <span>{label}</span>
-            <strong>{value}</strong>
-          </article>
-        ))}
-      </section>
-
-      <section className="workspace">
-        <div className="panel inspection-panel">
-          <div className="panel-heading">
-            <div><p className="section-kicker">LIVE INSPECTION</p><h2>Inspection workspace</h2></div>
-            <ScanSearch size={32} />
+      <div className="app-shell">
+        <nav className="topbar">
+          <div className="brand-lockup">
+            <div className="brand-mark"><ScanSearch size={20} /></div>
+            <div><strong>FactoryVision</strong><span>AI QUALITY SYSTEM</span></div>
           </div>
-
-          <label className="dropzone">
-            <input type="file" accept="image/*" onChange={handleFileChange} />
-            {previewUrl ? <img className="preview" src={previewUrl} alt="Selected inspection" /> : (
-              <div className="dropzone-empty">
-                <UploadCloud size={34} />
-                <strong>Select a product image</strong>
-                <span>PNG, JPG or JPEG · max 6 MB</span>
-              </div>
-            )}
-          </label>
-
-          <button className="primary-button" onClick={inspectImage} disabled={!file || !health.model_ready || loading}>
-            {loading ? 'Inspecting…' : DEMO_MODE ? 'Run demo inspection' : 'Inspect image'}
-          </button>
-
-          {!health.model_ready && <p className="hint">Configure the trained checkpoint on the backend to enable live inference.</p>}
-          {DEMO_MODE && <p className="hint">Preview mode lets you test the interface without provisioning cloud compute.</p>}
-          {error && <div className="message error-message">{error}</div>}
-        </div>
-
-        <div className="panel result-panel">
-          <p className="section-kicker">MODEL OUTPUT</p>
-          <h2>Inspection result</h2>
-          {!result ? (
-            <div className="empty-result"><Activity size={30} /><p>Run an inspection to see the PatchCore prediction, anomaly score and defect localization.</p></div>
-          ) : (
-            <div className="result-content">
-              <div className={`result-badge ${result.predicted_label === 'anomalous' ? 'result-defect' : 'result-normal'}`}>
-                {result.predicted_label === 'anomalous' ? <AlertTriangle size={18} /> : <CheckCircle2 size={18} />}
-                {result.predicted_label}
-              </div>
-              <div className="score-block">
-                <span>Anomaly score</span><strong>{Number(result.anomaly_score).toFixed(4)}</strong>
-                <div className="score-track"><div className="score-fill" style={{ width: `${Math.min(Math.max(Number(result.anomaly_score) * 100, 0), 100)}%` }} /></div>
-              </div>
-
-              {(result.localization_base64 || (DEMO_MODE && previewUrl)) && (
-                <div className="localization-block">
-                  <span>Defect localization {DEMO_MODE ? 'preview' : ''}</span>
-                  {result.localization_base64 ? (
-                    <img src={`data:image/png;base64,${result.localization_base64}`} alt="PatchCore anomaly localization" />
-                  ) : (
-                    <div className="demo-localization">
-                      <img src={previewUrl} alt="Demo localization preview" />
-                      <span className="demo-hotspot" />
-                    </div>
-                  )}
-                </div>
-              )}
-
-              <dl className="result-details">
-                <div><dt>Inspection</dt><dd>{result.inspection_id ? `#${result.inspection_id}` : '—'}</dd></div>
-                <div><dt>File</dt><dd>{result.filename}</dd></div>
-                <div><dt>Threshold</dt><dd>{Number(result.threshold).toFixed(2)}</dd></div>
-                <div><dt>Model</dt><dd>{result.model_name}</dd></div>
-              </dl>
-            </div>
-          )}
-        </div>
-      </section>
-
-      <section className="panel mlops-panel">
-        <div className="panel-heading">
-          <div><p className="section-kicker">MODEL OPERATIONS</p><h2>Release & MLOps evidence</h2></div>
-          <Workflow size={28} />
-        </div>
-        <div className="mlops-grid">
-          <div className="mlops-release">
-            <div className={`gate-pill ${modelOps.quality_gate_status === 'pass' ? 'gate-pass' : ''}`}><ShieldCheck size={16} />Quality gate: {modelOps.quality_gate_status}</div>
-            <h3>{modelOps.release_id || 'Release metadata unavailable'}</h3>
-            <p>{modelOps.model_name || 'PatchCore'} · {modelOps.category || 'category pending'}</p>
-            <dl className="mlops-details">
-              <div><dt>Release image AUROC</dt><dd>{modelOps.release_image_auroc != null ? Number(modelOps.release_image_auroc).toFixed(4) : '—'}</dd></div>
-              <div><dt>Release pixel AUROC</dt><dd>{modelOps.release_pixel_auroc != null ? Number(modelOps.release_pixel_auroc).toFixed(4) : '—'}</dd></div>
-              <div><dt>Mean image AUROC</dt><dd>{modelOps.mean_image_auroc != null ? Number(modelOps.mean_image_auroc).toFixed(4) : '—'}</dd></div>
-              <div><dt>Mean pixel AUROC</dt><dd>{modelOps.mean_pixel_auroc != null ? Number(modelOps.mean_pixel_auroc).toFixed(4) : '—'}</dd></div>
-            </dl>
+          <div className="nav-status">
+            <span className="live-dot" />
+            {DEMO_MODE ? 'PREVIEW NODE ONLINE' : health.model_ready ? 'MODEL RUNTIME ONLINE' : 'RUNTIME CHECK'}
           </div>
-          <div className="mlops-stack">
-            <div className="stack-item"><GitBranch size={18} /><span><strong>CI/CD</strong>{modelOps.ci_cd}</span></div>
-            <div className="stack-item"><Activity size={18} /><span><strong>Experiment tracking</strong>{modelOps.experiment_tracking}</span></div>
-            <div className="stack-item"><Boxes size={18} /><span><strong>Container registry</strong>{modelOps.container_registry}</span></div>
-            <div className="stack-item"><Cloud size={18} /><span><strong>Azure target</strong>{modelOps.azure_target}</span></div>
-            <div className="stack-item"><ShieldCheck size={18} /><span><strong>Deployment state</strong>{modelOps.azure_deployment_state}</span></div>
-          </div>
-        </div>
-      </section>
+        </nav>
 
-      <section className="panel history-panel">
-        <div className="panel-heading"><div><p className="section-kicker">QUALITY HISTORY</p><h2>Recent inspections</h2></div><History size={28} /></div>
-        {!history.items.length ? <p className="history-empty">No persisted inspections yet.</p> : (
-          <div className="history-table-wrap">
-            <table className="history-table">
-              <thead><tr><th>ID</th><th>File</th><th>Result</th><th>Score</th><th>Time</th></tr></thead>
-              <tbody>
-                {history.items.map((item) => (
-                  <tr key={item.id}>
-                    <td>#{item.id}</td><td>{item.filename}</td>
-                    <td><span className={`history-label ${item.predicted_label === 'anomalous' ? 'history-defect' : 'history-normal'}`}>{item.predicted_label}</span></td>
-                    <td>{Number(item.anomaly_score).toFixed(4)}</td><td>{new Date(item.created_at).toLocaleString()}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+        {DEMO_MODE && (
+          <div className="demo-banner">
+            <Sparkles size={16} />
+            <strong>Interactive portfolio preview</strong>
+            <span>UI interactions are simulated. Model metrics are real benchmark results.</span>
           </div>
         )}
-      </section>
-    </main>
+
+        <header className="hero-grid">
+          <div className="hero-copy">
+            <div className="eyebrow"><span /> INDUSTRIAL VISUAL INTELLIGENCE</div>
+            <h1>See defects.<br /><em>Understand quality.</em></h1>
+            <p>
+              AI-powered anomaly detection and defect localization with a production-style MLOps layer built for modern manufacturing workflows.
+            </p>
+            <div className="hero-actions">
+              <a className="primary-cta" href="#inspection"><Zap size={17} /> Launch inspection</a>
+              <a className="secondary-cta" href="#mlops"><Workflow size={17} /> Explore MLOps</a>
+            </div>
+            <div className="hero-tech-row">
+              <span>PATCHCORE</span><i />
+              <span>FASTAPI</span><i />
+              <span>REACT</span><i />
+              <span>MLFLOW</span><i />
+              <span>AZURE</span>
+            </div>
+          </div>
+
+          <div className="science-visual">
+            <div className="visual-label visual-label-top"><Cpu size={14} /> MODEL CORE</div>
+            <div className="orbit orbit-1"><span /></div>
+            <div className="orbit orbit-2"><span /></div>
+            <div className="orbit orbit-3"><span /></div>
+            <div className="core-ring core-ring-outer" />
+            <div className="core-ring core-ring-inner" />
+            <div className="core-node"><Atom size={52} /></div>
+            <div className="science-crosshair science-crosshair-x" />
+            <div className="science-crosshair science-crosshair-y" />
+            <div className="floating-chip chip-a"><Target size={15} /><span>99.02%<small>Mean image AUROC</small></span></div>
+            <div className="floating-chip chip-b"><Gauge size={15} /><span>0.6415<small>Anomaly signal</small></span></div>
+            <div className="floating-chip chip-c"><ShieldCheck size={15} /><span>PASS<small>Release gate</small></span></div>
+            <div className="visual-label visual-label-bottom"><Network size={14} /> SCIENTIFIC INFERENCE GRAPH</div>
+          </div>
+        </header>
+
+        <section className="metrics-grid">
+          <MetricCard icon={Boxes} label="Inspections" value={history.total || '—'} caption="Persisted quality samples" />
+          <MetricCard icon={AlertTriangle} label="Defect rate" value={defectRate} caption="Current anomaly ratio" />
+          <MetricCard icon={Activity} label="Model runtime" value={health.model_ready ? 'READY' : 'OFFLINE'} caption="PatchCore inference node" accent />
+          <MetricCard icon={ShieldCheck} label="Release gate" value={releaseGate || '—'} caption="Deterministic promotion gate" />
+        </section>
+
+        <section className="pipeline-ribbon" aria-label="Inference pipeline">
+          <div><UploadCloud size={16} /><span>Image ingestion</span></div><b />
+          <div><Cpu size={16} /><span>PatchCore</span></div><b />
+          <div><Target size={16} /><span>Localization</span></div><b />
+          <div><Database size={16} /><span>Evidence store</span></div><b />
+          <div><Workflow size={16} /><span>MLOps gate</span></div>
+        </section>
+
+        <section className="inspection-grid" id="inspection">
+          <article className="glass-panel inspection-panel">
+            <div className="panel-head">
+              <div><span className="section-code">01 / INSPECTION</span><h2>Visual inspection chamber</h2></div>
+              <div className="panel-icon"><ScanSearch size={23} /></div>
+            </div>
+
+            <label className={`upload-chamber ${previewUrl ? 'has-preview' : ''}`}>
+              <input type="file" accept="image/*" onChange={handleFileChange} />
+              {previewUrl ? (
+                <div className="preview-stage">
+                  <img src={previewUrl} alt="Selected inspection" />
+                  <div className={`scan-beam ${loading ? 'scan-active' : ''}`} />
+                  <div className="corner corner-tl" /><div className="corner corner-tr" />
+                  <div className="corner corner-bl" /><div className="corner corner-br" />
+                  <div className="preview-label">INPUT FRAME · {file?.name}</div>
+                </div>
+              ) : (
+                <div className="upload-empty">
+                  <div className="upload-orbit"><UploadCloud size={34} /></div>
+                  <strong>Drop a product image into the vision chamber</strong>
+                  <span>PNG · JPG · JPEG · maximum 6 MB</span>
+                  <small>The interface will visualize inspection signals in real time.</small>
+                </div>
+              )}
+            </label>
+
+            <button className="inspect-button" onClick={inspectImage} disabled={!file || !health.model_ready || loading}>
+              <span>{loading ? 'ANALYZING FRAME' : DEMO_MODE ? 'RUN DEMO INSPECTION' : 'RUN INSPECTION'}</span>
+              <Zap size={18} />
+            </button>
+            {DEMO_MODE && <p className="microcopy">Preview compute is simulated so you can test the interface without cloud resources.</p>}
+            {!health.model_ready && <p className="microcopy">Configure the trained checkpoint to enable live inference.</p>}
+            {error && <div className="error-box">{error}</div>}
+          </article>
+
+          <article className="glass-panel result-panel">
+            <div className="panel-head">
+              <div><span className="section-code">02 / ANALYSIS</span><h2>Defect intelligence</h2></div>
+              <div className="panel-icon"><Activity size={23} /></div>
+            </div>
+
+            {!result ? (
+              <div className="idle-analysis">
+                <div className="radar">
+                  <span className="radar-ring radar-ring-1" />
+                  <span className="radar-ring radar-ring-2" />
+                  <span className="radar-ring radar-ring-3" />
+                  <span className="radar-sweep" />
+                  <Target size={28} />
+                </div>
+                <h3>Awaiting inspection signal</h3>
+                <p>Run an image through the chamber to reveal anomaly probability, model confidence and localization evidence.</p>
+              </div>
+            ) : (
+              <div className="analysis-result">
+                <div className="result-topline">
+                  <div className={`result-state ${result.predicted_label === 'anomalous' ? 'state-anomalous' : 'state-normal'}`}>
+                    {result.predicted_label === 'anomalous' ? <AlertTriangle size={18} /> : <CheckCircle2 size={18} />}
+                    {result.predicted_label.toUpperCase()}
+                  </div>
+                  <span>Inspection #{result.inspection_id}</span>
+                </div>
+
+                <div className="score-console">
+                  <div><span>ANOMALY SCORE</span><strong>{Number(result.anomaly_score).toFixed(4)}</strong></div>
+                  <div className="score-scale"><span style={{ width: `${Math.min(Math.max(Number(result.anomaly_score) * 100, 0), 100)}%` }} /></div>
+                  <div className="scale-labels"><span>0.00 NORMAL</span><span>1.00 CRITICAL</span></div>
+                </div>
+
+                {(result.localization_base64 || (DEMO_MODE && previewUrl)) && (
+                  <div className="localization-console">
+                    <div className="localization-title"><Target size={15} /> DEFECT LOCALIZATION</div>
+                    <div className="localization-frame">
+                      {result.localization_base64 ? (
+                        <img src={`data:image/png;base64,${result.localization_base64}`} alt="PatchCore anomaly localization" />
+                      ) : (
+                        <>
+                          <img src={previewUrl} alt="Demo localization preview" />
+                          <span className="thermal-zone thermal-zone-a" />
+                          <span className="thermal-zone thermal-zone-b" />
+                          <span className="target-reticle" />
+                        </>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                <div className="result-metadata">
+                  <div><span>MODEL</span><strong>{result.model_name}</strong></div>
+                  <div><span>THRESHOLD</span><strong>{Number(result.threshold).toFixed(2)}</strong></div>
+                  <div><span>FILE</span><strong>{result.filename}</strong></div>
+                </div>
+              </div>
+            )}
+          </article>
+        </section>
+
+        <section className="glass-panel mlops-section" id="mlops">
+          <div className="panel-head mlops-head">
+            <div><span className="section-code">03 / MODEL OPERATIONS</span><h2>Release intelligence & MLOps graph</h2></div>
+            <div className="mlops-state"><span /> AZURE-ORIENTED PIPELINE READY</div>
+          </div>
+
+          <div className="mlops-layout">
+            <div className="release-console">
+              <div className="release-heading">
+                <div className={`gate-badge ${modelOps.quality_gate_status === 'pass' ? 'gate-pass' : ''}`}><ShieldCheck size={16} /> QUALITY GATE · {String(modelOps.quality_gate_status).toUpperCase()}</div>
+                <h3>{modelOps.release_id || 'Release metadata unavailable'}</h3>
+                <p>{modelOps.model_name || 'PatchCore'} · category: {modelOps.category || 'pending'}</p>
+              </div>
+
+              <div className="metric-bars">
+                {[
+                  ['Release image AUROC', modelOps.release_image_auroc],
+                  ['Release pixel AUROC', modelOps.release_pixel_auroc],
+                  ['Mean image AUROC', modelOps.mean_image_auroc],
+                  ['Mean pixel AUROC', modelOps.mean_pixel_auroc],
+                ].map(([label, value]) => (
+                  <div className="metric-bar" key={label}>
+                    <div><span>{label}</span><strong>{value != null ? Number(value).toFixed(4) : '—'}</strong></div>
+                    <div className="bar-track"><span style={{ width: value != null ? `${Math.min(Number(value) * 100, 100)}%` : '0%' }} /></div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="ops-graph">
+              <div className="ops-node"><GitBranch size={18} /><span><strong>CI/CD</strong>{modelOps.ci_cd}</span></div>
+              <div className="ops-link" />
+              <div className="ops-node"><Activity size={18} /><span><strong>Experiments</strong>{modelOps.experiment_tracking}</span></div>
+              <div className="ops-link" />
+              <div className="ops-node"><Boxes size={18} /><span><strong>Registry</strong>{modelOps.container_registry}</span></div>
+              <div className="ops-link" />
+              <div className="ops-node ops-node-azure"><Cloud size={18} /><span><strong>Azure target</strong>{modelOps.azure_target}</span></div>
+            </div>
+          </div>
+        </section>
+
+        <section className="glass-panel history-section">
+          <div className="panel-head">
+            <div><span className="section-code">04 / QUALITY MEMORY</span><h2>Inspection timeline</h2></div>
+            <div className="panel-icon"><History size={23} /></div>
+          </div>
+
+          {!history.items.length ? <p className="empty-history">No persisted inspections yet.</p> : (
+            <div className="timeline-table-wrap">
+              <table className="timeline-table">
+                <thead><tr><th>Inspection</th><th>Frame</th><th>Classification</th><th>Signal</th><th>Timestamp</th></tr></thead>
+                <tbody>
+                  {history.items.map((item) => (
+                    <tr key={item.id}>
+                      <td><span className="id-chip">#{item.id}</span></td>
+                      <td>{item.filename}</td>
+                      <td><span className={`classification ${item.predicted_label === 'anomalous' ? 'classification-danger' : 'classification-ok'}`}>{item.predicted_label}</span></td>
+                      <td><strong>{Number(item.anomaly_score).toFixed(4)}</strong></td>
+                      <td>{new Date(item.created_at).toLocaleString()}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </section>
+
+        <footer className="footer-bar">
+          <div><span className="footer-mark"><ScanSearch size={16} /></span> FactoryVision AI · Industrial Computer Vision & MLOps</div>
+          <div>PATCHCORE · FASTAPI · REACT · MLFLOW · AZURE DEVOPS · BICEP</div>
+        </footer>
+      </div>
+    </div>
   )
 }
