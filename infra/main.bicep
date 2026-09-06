@@ -174,6 +174,10 @@ resource api 'Microsoft.App/containerApps@2026-01-01' = if (deployBackend) {
               value: '/app/artifacts/model.ckpt'
             }
             {
+              name: 'FACTORYVISION_AZURE_DEPLOYMENT_STATE'
+              value: 'deployed-container-apps'
+            }
+            {
               name: 'FACTORYVISION_DB_BACKEND'
               value: 'cosmos'
             }
