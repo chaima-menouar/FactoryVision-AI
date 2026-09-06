@@ -11,7 +11,7 @@ FactoryVision AI is an end-to-end industrial visual inspection platform for dete
 - Expose model inference through a FastAPI backend.
 - Track inspections and quality metrics.
 - Provide a React dashboard for quality engineers.
-- Add an AI quality copilot in a later phase.
+- Add an AI quality copilot grounded in inspection evidence.
 - Deploy the production stack on **Microsoft Azure** only when the cloud phase begins.
 
 ## Zero-cost development strategy
@@ -41,7 +41,10 @@ Inspection database / analytics
 React quality dashboard
         |
         v
-AI Quality Copilot (later)
+Grounded quality context
+        |
+        v
+AI Quality Copilot
         |
         v
 Azure deployment (cloud phase)
@@ -55,7 +58,7 @@ ml/             hosted training code, experiment configuration and release metad
 frontend/       React/Vite quality inspection dashboard
 scripts/        data validation, smoke-test, model packaging and verified installation utilities
 data/           dataset documentation only (raw data ignored)
-docs/           architecture and hosted-training documentation
+docs/           architecture, training and deployment-preparation documentation
 tests/          backend and release-integrity tests
 .github/        CI workflows
 ```
@@ -67,8 +70,8 @@ tests/          backend and release-integrity tests
 3. **Evaluation & explainability** — image/pixel AUROC, F1, anomaly maps, error analysis. ✅
 4. **Backend & persistence** — real PatchCore inference, inspection history and SQLite persistence. ✅
 5. **Dashboard** — live image upload, anomaly score, localization, quality KPIs and recent history. ✅
-6. **AI Copilot** — grounded assistant over inspection history and quality documentation. **Next.**
-7. **Azure cloud phase** — containerization, Azure-hosted API/app/database/storage, monitoring and CI/CD. **Not started; no Azure resources provisioned yet.**
+6. **AI Copilot** — grounded inspection-context layer is implemented; LLM provider integration is the remaining step. **In progress.**
+7. **Azure cloud phase** — a single-container runtime boundary is prepared, but **no Azure resources have been provisioned**.
 
 ## Hosted baseline
 
@@ -119,14 +122,21 @@ The backend now provides:
 - `GET /health` for runtime/model readiness.
 - `POST /api/v1/inspect` for real PatchCore image inference.
 - `GET /api/v1/inspections` for persisted inspection history and quality summary metrics.
+- `GET /api/v1/copilot/context` for a grounded evidence bundle built only from persisted inspection records.
 - Base64 PNG defect-localization overlays in inspection responses.
-- Configurable `FACTORYVISION_MODEL_CHECKPOINT`, `FACTORYVISION_DB_PATH`, and `FACTORYVISION_CORS_ORIGINS` runtime settings.
+- Configurable `FACTORYVISION_MODEL_CHECKPOINT`, `FACTORYVISION_DB_PATH`, `FACTORYVISION_FRONTEND_DIST`, and `FACTORYVISION_CORS_ORIGINS` runtime settings.
 
-The React dashboard now provides live image upload, model readiness, anomaly score, defect localization, inspection count, defect rate, and recent inspection history.
+The React dashboard provides live image upload, model readiness, anomaly score, defect localization, inspection count, defect rate, and recent inspection history.
+
+## Deployment preparation
+
+A multi-stage `Dockerfile` now builds the React frontend and serves it from the same FastAPI runtime. The model checkpoint and SQLite database remain external/persistent assets rather than being baked into the container. See `docs/DEPLOYMENT_PREP.md`.
+
+This prepares the application boundary for Azure later without creating any Azure resource or charge today.
 
 ## Current status
 
-**v0.6 — inspection intelligence layer complete.** The project now has reproducible hosted training, five-category evaluation, qualitative explainability review, a verified portable model release, real FastAPI inference, defect-localization output, persistent inspection history, quality KPIs, and a connected React dashboard. The next engineering phase is the grounded quality copilot. Azure provisioning will begin only after the application/runtime boundary is finalized.
+**v0.7 — grounded copilot and deployment foundation.** FactoryVision AI now has reproducible hosted training, five-category evaluation, explainability review, a verified portable model release, real FastAPI inference, defect localization, persistent inspection history, quality KPIs, a connected React dashboard, a grounded copilot context endpoint, and a single-container deployment boundary. The next true external dependency is selecting and configuring the LLM provider for the quality copilot; Azure provisioning remains intentionally paused until that decision is ready.
 
 ## Important data note
 
