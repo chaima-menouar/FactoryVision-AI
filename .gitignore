@@ -21,6 +21,12 @@ outputs/
 mlruns/
 wandb/
 
+# Runtime persistence
+runtime/
+*.db
+*.db-shm
+*.db-wal
+
 # Data - never commit raw datasets
 data/raw/
 data/processed/
