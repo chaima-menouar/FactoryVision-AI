@@ -15,7 +15,8 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     FACTORYVISION_DB_BACKEND=cosmos \
     FACTORYVISION_FRONTEND_DIST=/app/frontend/dist \
     FACTORYVISION_DAILY_INSPECTION_LIMIT=25 \
-    FACTORYVISION_MAX_UPLOAD_BYTES=6291456
+    FACTORYVISION_MAX_UPLOAD_BYTES=6291456 \
+    FACTORYVISION_AZURE_DEPLOYMENT_STATE=container-image-ready
 
 COPY requirements.txt requirements-inference.txt ./
 RUN pip install --no-cache-dir torch==2.10.0 torchvision==0.25.0 --index-url https://download.pytorch.org/whl/cpu \
@@ -23,6 +24,9 @@ RUN pip install --no-cache-dir torch==2.10.0 torchvision==0.25.0 --index-url htt
 
 COPY backend/ ./backend/
 COPY scripts/ ./scripts/
+COPY ml/releases/bottle_patchcore_v1.json ./ml/releases/bottle_patchcore_v1.json
+COPY ml/results/patchcore_mvtec_baseline.csv ./ml/results/patchcore_mvtec_baseline.csv
+COPY ml/quality_gate.json ./ml/quality_gate.json
 COPY --from=frontend-build /app/frontend/dist ./frontend/dist
 COPY build_artifacts/model.ckpt ./artifacts/model.ckpt
 COPY build_artifacts/manifest.json ./artifacts/manifest.json
