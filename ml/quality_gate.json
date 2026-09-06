@@ -1,0 +1,16 @@
+{
+  "purpose": "Internal portfolio release gates for the validated PatchCore baseline. These thresholds are not production acceptance criteria.",
+  "release_category": "bottle",
+  "release_thresholds": {
+    "image_AUROC": 0.99,
+    "image_F1Score": 0.98,
+    "pixel_AUROC": 0.98,
+    "pixel_F1Score": 0.70
+  },
+  "portfolio_mean_thresholds": {
+    "image_AUROC": 0.98,
+    "image_F1Score": 0.96,
+    "pixel_AUROC": 0.97,
+    "pixel_F1Score": 0.60
+  }
+}
