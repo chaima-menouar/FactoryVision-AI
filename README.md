@@ -16,7 +16,7 @@ FactoryVision AI is an end-to-end industrial visual inspection platform for dete
 
 ## Zero-cost development strategy
 
-We will **not train locally**. Model training is designed for free hosted notebooks (Kaggle first, Colab as fallback). Raw industrial datasets and trained checkpoints are not committed to GitHub.
+We do **not train locally**. Model training is designed for free hosted notebooks (Kaggle first, Colab as fallback). Raw industrial datasets and trained checkpoints are not committed to GitHub.
 
 Initial dataset: **MVTec AD**. The repository also leaves room for VisA/BTAD later for robustness testing.
 
@@ -50,13 +50,13 @@ Azure deployment (cloud phase)
 ## Repository layout
 
 ```text
-backend/        FastAPI service
-ml/             hosted training code, inference code and experiment configuration
-frontend/       React/Vite dashboard
-scripts/        data validation, smoke-test and model packaging utilities
+backend/        FastAPI service and SQLite-backed inspection persistence
+ml/             hosted training code, experiment configuration and release metadata
+frontend/       React/Vite quality inspection dashboard
+scripts/        data validation, smoke-test, model packaging and verified installation utilities
 data/           dataset documentation only (raw data ignored)
-docs/           architecture and Kaggle training runbook
-tests/          backend tests
+docs/           architecture and hosted-training documentation
+tests/          backend and release-integrity tests
 .github/        CI workflows
 ```
 
@@ -65,10 +65,10 @@ tests/          backend tests
 1. **Foundation & data pipeline** — repository structure, reproducible dataset preparation, baseline API. ✅
 2. **Computer vision baseline** — PatchCore experiments on MVTec AD using hosted Kaggle compute. ✅
 3. **Evaluation & explainability** — image/pixel AUROC, F1, anomaly maps, error analysis. ✅
-4. **Backend & persistence** — real PatchCore inference connected; inspection history and persistence are next. **In progress.**
-5. **Dashboard** — live image upload and prediction UI connected to the API; quality history/KPIs remain. **In progress.**
-6. **AI Copilot** — grounded assistant over inspection history and quality documentation.
-7. **Azure cloud phase** — containerization, Azure-hosted API/app/database/storage, monitoring and CI/CD.
+4. **Backend & persistence** — real PatchCore inference, inspection history and SQLite persistence. ✅
+5. **Dashboard** — live image upload, anomaly score, localization, quality KPIs and recent history. ✅
+6. **AI Copilot** — grounded assistant over inspection history and quality documentation. **Next.**
+7. **Azure cloud phase** — containerization, Azure-hosted API/app/database/storage, monitoring and CI/CD. **Not started; no Azure resources provisioned yet.**
 
 ## Hosted baseline
 
@@ -97,18 +97,37 @@ The machine-readable summary is stored in `ml/results/patchcore_mvtec_baseline.c
 
 Qualitative review confirmed that PatchCore localizes representative `bottle` and `zipper` defects in the correct regions. Zipper anomaly maps are broader than the ground-truth masks, which is consistent with its lower pixel F1.
 
-## Real API inference milestone
+## Verified model release
 
-The selected `bottle` PatchCore checkpoint was independently restored and then exercised through the FastAPI endpoint. The API returned a real anomalous prediction for `broken_small/000.png` with an anomaly score of `0.64147`, while `/health` reported `model_ready: true`.
+The selected `bottle` PatchCore checkpoint was independently restored and exercised through the FastAPI endpoint. The API returned a real anomalous prediction for `broken_small/000.png` with an anomaly score of `0.64147`, while `/health` reported `model_ready: true`.
 
-The frontend now supports a live image upload flow against `/api/v1/inspect`. The backend checkpoint path is configured through `FACTORYVISION_MODEL_CHECKPOINT`.
+The portable release archive has also been verified outside Kaggle:
 
-Use `scripts/package_model_release.py` to create a portable model archive containing the checkpoint plus a SHA-256 manifest before leaving the hosted notebook session.
+- Release: `bottle-patchcore-v1`
+- Archive: `factoryvision-bottle-patchcore-release.zip`
+- Archive size: **231,213,915 bytes**
+- Checkpoint size: **231,213,223 bytes**
+- Checkpoint SHA-256: `8c1e120c2554d055cf3c9d2779da2dbbd1fd8f022c632c9feab1366528d705db`
+- Registry metadata: `ml/releases/bottle_patchcore_v1.json`
+
+Use `scripts/package_model_release.py` to create a release archive and `scripts/install_model_release.py` to verify its manifest/checksum before installing it into `artifacts/model.ckpt`. Release ZIP files and checkpoints remain external artifacts and are intentionally ignored by Git.
+
+## Product integration
+
+The backend now provides:
+
+- `GET /health` for runtime/model readiness.
+- `POST /api/v1/inspect` for real PatchCore image inference.
+- `GET /api/v1/inspections` for persisted inspection history and quality summary metrics.
+- Base64 PNG defect-localization overlays in inspection responses.
+- Configurable `FACTORYVISION_MODEL_CHECKPOINT`, `FACTORYVISION_DB_PATH`, and `FACTORYVISION_CORS_ORIGINS` runtime settings.
+
+The React dashboard now provides live image upload, model readiness, anomaly score, defect localization, inspection count, defect rate, and recent inspection history.
 
 ## Current status
 
-**v0.5 — real model inference connected end to end.** The project has moved from model experimentation into product integration: real MVTec evaluation, qualitative anomaly-map review, independent checkpoint restoration, FastAPI inference and the live React inspection workspace are now in place. Next: preserve the selected model release artifact, add inspection persistence/history and expose localization output to the product UI before the Azure phase.
+**v0.6 — inspection intelligence layer complete.** The project now has reproducible hosted training, five-category evaluation, qualitative explainability review, a verified portable model release, real FastAPI inference, defect-localization output, persistent inspection history, quality KPIs, and a connected React dashboard. The next engineering phase is the grounded quality copilot. Azure provisioning will begin only after the application/runtime boundary is finalized.
 
 ## Important data note
 
-Do not commit MVTec AD images or other large datasets to this repository. Keep them in Kaggle/Colab storage or another approved dataset location and respect each dataset's license.
+Do not commit MVTec AD images, release ZIP files, or trained checkpoints to this repository. Keep them in approved external storage and respect each dataset's license.
