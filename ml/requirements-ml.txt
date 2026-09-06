@@ -1,4 +1,4 @@
-# Hosted training dependencies (Kaggle/Colab only)
+# Hosted training and experiment-tracking dependencies.
 # PyTorch is supplied by the hosted notebook environment.
 # Prefer a Tesla T4-class accelerator on Kaggle when the preinstalled PyTorch build does not support P100 (sm_60).
 anomalib>=2.2,<3
@@ -8,3 +8,4 @@ scikit-learn>=1.6
 pandas>=2.2
 matplotlib>=3.9
 pyyaml>=6.0
+mlflow>=3.0,<4
