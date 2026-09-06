@@ -53,7 +53,11 @@ copilot = QualityCopilotService()
 
 @app.get("/health", response_model=HealthResponse)
 def health() -> HealthResponse:
-    return HealthResponse(status="ok", model_ready=inference.model_ready)
+    return HealthResponse(
+        status="ok",
+        model_ready=inference.model_ready,
+        copilot_ready=copilot.ready,
+    )
 
 
 @app.get("/api/v1/inspections", response_model=InspectionHistoryResponse)
