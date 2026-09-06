@@ -1,0 +1,315 @@
+/* FactoryVision AI — Calm Industrial Sci‑Fi palette
+   Loaded after cinematic.css to preserve layout/animation while removing eye-straining neon. */
+
+:root {
+  --cyan: #d6a35b;
+  --blue: #b98443;
+  --violet: #9e7a54;
+  --magenta: #c29158;
+  --pink: #d9a76a;
+  --green: #8fb8a0;
+  --red: #d87962;
+  --panel: rgba(20, 23, 27, .92);
+  --panel2: rgba(25, 29, 33, .90);
+  --line: rgba(219, 186, 137, .14);
+  --muted: #98a0a7;
+}
+
+body {
+  background: #0d0f11;
+  color: #ece9e3;
+}
+
+.fv-app {
+  background:
+    radial-gradient(circle at 76% 8%, rgba(187, 132, 67, .09), transparent 31%),
+    radial-gradient(circle at 13% 24%, rgba(135, 153, 145, .055), transparent 28%),
+    linear-gradient(180deg, #101214 0%, #15181b 48%, #0e1012 100%);
+}
+
+.fv-grid {
+  opacity: .38;
+  background-image:
+    linear-gradient(rgba(218, 187, 142, .035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(218, 187, 142, .035) 1px, transparent 1px);
+  background-size: 64px 64px;
+}
+
+.fv-aurora { opacity: .22; filter: blur(42px); }
+.fv-aurora-a {
+  background: radial-gradient(circle, rgba(196, 139, 68, .22), rgba(196, 139, 68, .035) 52%, transparent 72%);
+}
+.fv-aurora-b {
+  background: radial-gradient(circle, rgba(112, 139, 128, .14), rgba(112, 139, 128, .025) 62%, transparent 74%);
+}
+.fv-aurora-c {
+  background: radial-gradient(circle, rgba(166, 116, 63, .12), rgba(166, 116, 63, .02) 58%, transparent 74%);
+}
+
+.fv-star {
+  width: 2px;
+  height: 2px;
+  opacity: .44;
+  background: #c9a46f;
+  box-shadow: 0 0 8px rgba(201, 164, 111, .34);
+}
+.fv-star-2,.fv-star-5,.fv-star-4,.fv-star-8 {
+  background: #a9b0aa;
+  box-shadow: 0 0 7px rgba(169, 176, 170, .25);
+}
+
+.fv-beam {
+  opacity: .13;
+  background: linear-gradient(90deg, transparent, #b88b50, #8d9a92, transparent);
+}
+
+.fv-nav {
+  background: rgba(17, 20, 23, .88);
+  border-color: rgba(219, 186, 137, .13);
+  box-shadow: 0 18px 52px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.025);
+}
+.fv-brand-mark {
+  color: #d8ad73;
+  background: linear-gradient(145deg, rgba(202, 151, 83, .14), rgba(109, 123, 117, .09));
+  border-color: rgba(216, 173, 115, .25);
+  box-shadow: inset 0 0 15px rgba(216, 173, 115, .035);
+}
+.fv-brand strong { color: #f0ede7; }
+.fv-brand b {
+  background: linear-gradient(100deg, #e2bb84, #bd8e50 65%, #9ea9a2);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+.fv-brand small { color: #6f777b; }
+.fv-nav-links a { color: #9ba1a4; }
+.fv-nav-links a:hover { color: #f1ede7; }
+.fv-nav-links a::after {
+  background: linear-gradient(90deg, #c89554, #8f9a94);
+  box-shadow: 0 0 7px rgba(200, 149, 84, .22);
+}
+.fv-nav-cta,
+.fv-btn-primary,
+.fv-analyze-btn {
+  color: #17130e;
+  background: linear-gradient(135deg, #d7ad72, #ba8749 62%, #9f7d59 100%);
+  box-shadow: 0 10px 26px rgba(172, 116, 51, .14);
+}
+.fv-nav-cta:hover,
+.fv-btn-primary:hover,
+.fv-analyze-btn:hover:not(:disabled) {
+  box-shadow: 0 13px 30px rgba(172, 116, 51, .20);
+}
+
+.fv-preview-note { color: #81898c; }
+.fv-preview-note strong { color: #d5d0c8; }
+.fv-preview-note svg { color: #c39760; }
+
+.fv-hero {
+  border-color: rgba(218, 185, 137, .12);
+  background:
+    radial-gradient(circle at 66% 48%, rgba(184, 132, 69, .075), transparent 35%),
+    linear-gradient(135deg, rgba(21,24,27,.97), rgba(15,18,20,.95) 52%, rgba(22,24,26,.96));
+  box-shadow: 0 30px 90px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.018);
+}
+.fv-hero::before {
+  background: linear-gradient(112deg, transparent 0 38%, rgba(212, 169, 107, .028) 50%, transparent 62%);
+}
+.fv-hero::after {
+  background: linear-gradient(90deg, transparent, rgba(196,145,77,.24), rgba(142,154,146,.16), transparent);
+}
+.fv-kicker { color: #cba066; }
+.fv-kicker span {
+  background: linear-gradient(90deg, #c59453, #87958d);
+  box-shadow: none;
+}
+.fv-hero-copy h1 { color: #f0ede7; }
+.fv-hero-copy h1 em {
+  background: linear-gradient(90deg, #e2bd89 0%, #c59454 52%, #9ca8a1 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  filter: none;
+}
+.fv-hero-copy > p { color: #9ba2a5; }
+.fv-btn-ghost {
+  color: #d8d4cd;
+  border-color: rgba(218, 185, 137, .14);
+  background: rgba(255,255,255,.018);
+}
+.fv-tech-line { color: #6f777b; }
+.fv-tech-line i {
+  background: #bd8d50;
+  box-shadow: none;
+}
+
+.fv-scanner-scene::before {
+  background: radial-gradient(circle, rgba(185,134,68,.085), rgba(110,130,120,.035) 44%, transparent 70%);
+}
+.fv-machine-top {
+  color: #e5dfd6;
+  background: linear-gradient(180deg, #2b2f32, #171a1d 88%);
+  border-color: rgba(214, 172, 112, .19);
+  box-shadow: 0 24px 50px rgba(0,0,0,.38), inset 0 1px 0 rgba(255,255,255,.035);
+}
+.fv-machine-top::before,.fv-machine-top::after {
+  background: linear-gradient(90deg, #c89859, #9d8467);
+  box-shadow: 0 0 9px rgba(200,152,89,.22);
+}
+.fv-machine-top svg { color: #d5a96c; }
+.fv-lens {
+  background: radial-gradient(ellipse,#121416 10%,#25292c 52%,#4b4439 70%,#111315 76%);
+  border-color: rgba(212, 166, 101, .50);
+  box-shadow: 0 0 10px rgba(198,146,78,.20), 0 16px 45px rgba(0,0,0,.44);
+}
+.fv-lens::before,.fv-lens::after { border-color: rgba(196, 151, 91, .30); }
+.fv-scan-cone {
+  opacity: .40;
+  filter: saturate(.55);
+}
+
+.fv-holo-box,
+.fv-detect-card,
+.fv-product-chip,
+.fv-stat,
+.fv-feature-strip,
+.fv-panel,
+.fv-release-card,
+.fv-pipeline-node,
+.fv-benchmark-row > div,
+.fv-history-row {
+  border-color: rgba(214, 177, 124, .12) !important;
+  box-shadow: none !important;
+}
+
+.fv-panel,
+.fv-stat,
+.fv-feature-strip,
+.fv-release-card,
+.fv-pipeline-node,
+.fv-benchmark-row > div {
+  background: linear-gradient(145deg, rgba(26,29,32,.93), rgba(18,21,23,.92)) !important;
+}
+
+.fv-panel-head > div > span,
+.fv-rail-title,
+.fv-card-head,
+.fv-chart-head span,
+.fv-release-card > div > span,
+.fv-benchmark-row span {
+  color: #b88b51 !important;
+}
+
+.fv-panel h2,
+.fv-awaiting h3,
+.fv-release-card h3,
+.fv-product-chip strong,
+.fv-card-product strong,
+.fv-stat strong {
+  color: #ece7df !important;
+}
+
+.fv-panel p,
+.fv-awaiting p,
+.fv-product-chip small,
+.fv-card-product span,
+.fv-stat span,
+.fv-stat small,
+.fv-release-card p {
+  color: #969da0 !important;
+}
+
+.fv-product-chip.is-selected,
+.fv-example-grid button.active {
+  background: linear-gradient(145deg, rgba(198,145,76,.12), rgba(112,128,119,.055)) !important;
+  border-color: rgba(206,159,96,.28) !important;
+}
+
+.fv-product-chip.is-selected svg,
+.fv-example-grid button.active svg,
+.fv-product-thumb svg,
+.fv-empty-stage svg,
+.fv-card-product svg,
+.fv-hero-product {
+  color: #c89a5e !important;
+  filter: none !important;
+}
+
+.fv-mini-heat,
+.fv-defect-heat,
+.fv-preview-heat,
+.fv-result-heat {
+  filter: saturate(.55) brightness(.88) !important;
+  opacity: .58 !important;
+}
+
+.fv-orbit-ring,
+.fv-preview-rings span,
+.fv-radar i,
+.fv-reticle,
+.fv-result-target {
+  border-color: rgba(201, 157, 97, .24) !important;
+}
+
+.fv-live-dot,
+.fv-live-pill i,
+.fv-mlops-status i {
+  background: #8eae9d !important;
+  box-shadow: 0 0 8px rgba(142,174,157,.24) !important;
+}
+
+.fv-live-pill,
+.fv-mlops-status,
+.fv-gate-pass {
+  color: #9fc3ad !important;
+  background: rgba(98, 132, 113, .08) !important;
+  border-color: rgba(130, 164, 145, .18) !important;
+}
+
+.fv-status-bad,
+.fv-defect-label,
+.fv-history-row .is-bad {
+  color: #d7866f !important;
+}
+.fv-history-row .is-good { color: #96b9a5 !important; }
+
+.fv-dropzone {
+  border-color: rgba(214,177,124,.16) !important;
+  background: rgba(255,255,255,.012) !important;
+}
+.fv-dropzone:hover {
+  border-color: rgba(207,159,95,.30) !important;
+  background: rgba(195,145,80,.025) !important;
+}
+
+.fv-quality-chart,
+.fv-gauge-row,
+.fv-history-table {
+  background: rgba(13,15,17,.46) !important;
+  border-color: rgba(214,177,124,.10) !important;
+}
+
+.fv-line { color: #b98a50 !important; }
+.fv-signal-bars i { background: linear-gradient(180deg, #c09359, #706c62) !important; }
+
+.fv-footer {
+  color: #757d80;
+  border-color: rgba(214,177,124,.10);
+}
+
+/* Reduce visual fatigue while keeping motion alive. */
+.fv-aurora,
+.fv-orbit-ring,
+.fv-preview-rings span,
+.fv-radar i,
+.fv-star,
+.fv-beam {
+  animation-duration: 1.35em;
+  animation-timing-function: ease-in-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+  }
+}
