@@ -1,85 +1,32 @@
 # FactoryVision AI
 
-**AI-Powered Quality Inspection & Manufacturing Copilot**
-
-FactoryVision AI is an end-to-end industrial visual inspection platform for detecting, localizing, tracking, and explaining manufacturing defects.
-
-## Project goals
-
-- Detect anomalous/defective products from images.
-- Localize defects with anomaly heatmaps or segmentation masks.
-- Expose model inference through a FastAPI backend.
-- Track inspections and quality metrics.
-- Provide a React dashboard for quality engineers.
-- Add an AI quality copilot grounded in inspection evidence.
-- Deploy the production stack on **Microsoft Azure** only when the cloud phase begins.
-
-## Zero-cost development strategy
-
-We do **not train locally**. Model training is designed for free hosted notebooks (Kaggle first, Colab as fallback). Raw industrial datasets and trained checkpoints are not committed to GitHub.
-
-Initial dataset: **MVTec AD**. The repository also leaves room for VisA/BTAD later for robustness testing.
+**AI-powered quality inspection and manufacturing copilot.** FactoryVision AI is an end-to-end industrial visual-inspection platform for detecting, localizing, tracking, and explaining manufacturing defects.
 
 ## Architecture
 
-```text
-Industrial image / camera
-        |
-        v
-Computer Vision anomaly detector
-        |
-        +--> anomaly score
-        +--> defect localization heatmap/mask
-        |
-        v
-FastAPI inference service
-        |
-        v
-Inspection database / analytics
-        |
-        v
-React quality dashboard
-        |
-        v
-Grounded quality context
-        |
-        v
-AI Quality Copilot
-        |
-        v
-Azure deployment (cloud phase)
-```
+![FactoryVision AI architecture](docs/architecture.svg)
 
-## Repository layout
+The production path is deliberately layered: an industrial image is scored and localized by PatchCore, FastAPI exposes real inference, inspection history is persisted for analytics, React visualizes quality evidence, and a grounded copilot context is built only from recorded inspections.
 
-```text
-backend/        FastAPI service and SQLite-backed inspection persistence
-ml/             hosted training code, experiment configuration and release metadata
-frontend/       React/Vite quality inspection dashboard
-scripts/        data validation, smoke-test, model packaging and verified installation utilities
-data/           dataset documentation only (raw data ignored)
-docs/           architecture, training and deployment-preparation documentation
-tests/          backend and release-integrity tests
-.github/        CI workflows
-```
+## Project goals
 
-## Planned phases
+- detect anomalous or defective products from images;
+- localize defects with anomaly heatmaps/masks;
+- expose model inference through FastAPI;
+- persist inspections and quality metrics;
+- provide a React quality-engineering dashboard;
+- prepare a grounded AI quality copilot;
+- keep Azure provisioning separate until the cloud phase is intentionally started.
 
-1. **Foundation & data pipeline** — repository structure, reproducible dataset preparation, baseline API. ✅
-2. **Computer vision baseline** — PatchCore experiments on MVTec AD using hosted Kaggle compute. ✅
-3. **Evaluation & explainability** — image/pixel AUROC, F1, anomaly maps, error analysis. ✅
-4. **Backend & persistence** — real PatchCore inference, inspection history and SQLite persistence. ✅
-5. **Dashboard** — live image upload, anomaly score, localization, quality KPIs and recent history. ✅
-6. **AI Copilot** — grounded inspection-context layer is implemented; LLM provider integration is the remaining step. **In progress.**
-7. **Azure cloud phase** — a single-container runtime boundary is prepared, but **no Azure resources have been provisioned**.
+## Development strategy
 
-## Hosted baseline
+Model training is designed for free hosted notebooks rather than local training. Kaggle is the primary path, with Colab as a fallback. Raw industrial datasets and trained checkpoints are intentionally excluded from GitHub.
 
-The reproducible PatchCore entrypoint is available at `ml/train_patchcore.py`. Hosted ML dependencies are isolated in `ml/requirements-ml.txt`, and the Kaggle procedure is documented in `docs/TRAINING_KAGGLE.md`.
+Initial dataset: **MVTec AD**.
 
-The first baseline covers `bottle`, `cable`, `metal_nut`, `transistor`, and `zipper`.
+## PatchCore baseline
 
-### Real PatchCore baseline results
+The first reproducible baseline covers `bottle`, `cable`, `metal_nut`, `transistor`, and `zipper`.
 
 | Category | Image AUROC | Image F1 | Pixel AUROC | Pixel F1 |
 |---|---:|---:|---:|---:|
@@ -96,48 +43,71 @@ Mean metrics across the five categories:
 - Pixel AUROC: **0.9825**
 - Pixel F1: **0.6719**
 
-The machine-readable summary is stored in `ml/results/patchcore_mvtec_baseline.csv`. Large checkpoints and raw dataset files remain outside GitHub.
-
-Qualitative review confirmed that PatchCore localizes representative `bottle` and `zipper` defects in the correct regions. Zipper anomaly maps are broader than the ground-truth masks, which is consistent with its lower pixel F1.
+The machine-readable summary is stored in `ml/results/patchcore_mvtec_baseline.csv`.
 
 ## Verified model release
 
 The selected `bottle` PatchCore checkpoint was independently restored and exercised through the FastAPI endpoint. The API returned a real anomalous prediction for `broken_small/000.png` with an anomaly score of `0.64147`, while `/health` reported `model_ready: true`.
 
-The portable release archive has also been verified outside Kaggle:
+Release metadata:
 
-- Release: `bottle-patchcore-v1`
-- Archive: `factoryvision-bottle-patchcore-release.zip`
-- Archive size: **231,213,915 bytes**
-- Checkpoint size: **231,213,223 bytes**
-- Checkpoint SHA-256: `8c1e120c2554d055cf3c9d2779da2dbbd1fd8f022c632c9feab1366528d705db`
-- Registry metadata: `ml/releases/bottle_patchcore_v1.json`
+- release: `bottle-patchcore-v1`
+- archive: `factoryvision-bottle-patchcore-release.zip`
+- checkpoint SHA-256: `8c1e120c2554d055cf3c9d2779da2dbbd1fd8f022c632c9feab1366528d705db`
+- registry metadata: `ml/releases/bottle_patchcore_v1.json`
 
-Use `scripts/package_model_release.py` to create a release archive and `scripts/install_model_release.py` to verify its manifest/checksum before installing it into `artifacts/model.ckpt`. Release ZIP files and checkpoints remain external artifacts and are intentionally ignored by Git.
+Large checkpoints and release archives remain external artifacts and are ignored by Git.
 
-## Product integration
+## Backend capabilities
 
-The backend now provides:
+- `GET /health` — runtime/model readiness;
+- `POST /api/v1/inspect` — real PatchCore image inference;
+- `GET /api/v1/inspections` — inspection history and quality KPIs;
+- `GET /api/v1/copilot/context` — grounded evidence bundle from persisted inspections;
+- base64 PNG defect-localization overlays;
+- configurable model, database, frontend, and CORS runtime settings.
 
-- `GET /health` for runtime/model readiness.
-- `POST /api/v1/inspect` for real PatchCore image inference.
-- `GET /api/v1/inspections` for persisted inspection history and quality summary metrics.
-- `GET /api/v1/copilot/context` for a grounded evidence bundle built only from persisted inspection records.
-- Base64 PNG defect-localization overlays in inspection responses.
-- Configurable `FACTORYVISION_MODEL_CHECKPOINT`, `FACTORYVISION_DB_PATH`, `FACTORYVISION_FRONTEND_DIST`, and `FACTORYVISION_CORS_ORIGINS` runtime settings.
+## Frontend capabilities
 
-The React dashboard provides live image upload, model readiness, anomaly score, defect localization, inspection count, defect rate, and recent inspection history.
+The React dashboard provides:
+
+- image upload;
+- model readiness;
+- anomaly score;
+- defect localization;
+- inspection count;
+- defect rate;
+- recent inspection history.
+
+## Repository layout
+
+```text
+backend/        FastAPI service and SQLite-backed inspection persistence
+ml/             hosted training code, experiment config and release metadata
+frontend/       React/Vite quality dashboard
+scripts/        validation, smoke tests, release packaging/install utilities
+data/           dataset documentation only
+docs/           architecture, training and deployment documentation
+tests/          backend and release-integrity tests
+.github/        CI workflows
+```
 
 ## Deployment preparation
 
-A multi-stage `Dockerfile` now builds the React frontend and serves it from the same FastAPI runtime. The model checkpoint and SQLite database remain external/persistent assets rather than being baked into the container. See `docs/DEPLOYMENT_PREP.md`.
+A multi-stage Dockerfile builds the React frontend and serves it from the same FastAPI runtime. The model checkpoint and SQLite database remain external/persistent assets rather than being baked into the container.
 
-This prepares the application boundary for Azure later without creating any Azure resource or charge today.
+This establishes a clean deployment boundary for a future Azure phase without claiming that Azure resources are already provisioned.
 
 ## Current status
 
-**v0.7 — grounded copilot and deployment foundation.** FactoryVision AI now has reproducible hosted training, five-category evaluation, explainability review, a verified portable model release, real FastAPI inference, defect localization, persistent inspection history, quality KPIs, a connected React dashboard, a grounded copilot context endpoint, and a single-container deployment boundary. The next true external dependency is selecting and configuring the LLM provider for the quality copilot; Azure provisioning remains intentionally paused until that decision is ready.
+**v0.7 — grounded copilot and deployment foundation.** The project includes hosted training, five-category evaluation, explainability review, a verified portable model release, real FastAPI inference, localization, persistent history, quality KPIs, a connected React dashboard, grounded copilot context, and a single-container deployment boundary.
 
-## Important data note
+The remaining external dependency for the copilot is selecting/configuring the LLM provider. Azure provisioning remains intentionally paused.
 
-Do not commit MVTec AD images, release ZIP files, or trained checkpoints to this repository. Keep them in approved external storage and respect each dataset's license.
+## Data and safety note
+
+Do not commit MVTec AD images, release ZIP files, or trained checkpoints. Keep them in approved external storage and respect dataset licenses.
+
+## Author
+
+Developed and maintained by **Chaima Menouar**.
