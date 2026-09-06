@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 700" role="img" aria-labelledby="title desc">
+  <title id="title">FactoryVision scientific AI illustration</title>
+  <desc id="desc">A futuristic industrial inspection cell with a camera, product bottle, neural network and scanning beam.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffffff" stop-opacity=".96"/>
+      <stop offset=".48" stop-color="#eefbff" stop-opacity=".94"/>
+      <stop offset="1" stop-color="#f5f1ff" stop-opacity=".96"/>
+    </linearGradient>
+    <linearGradient id="cyan" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#00c8ff"/>
+      <stop offset="1" stop-color="#5b6cff"/>
+    </linearGradient>
+    <linearGradient id="violet" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#7c5cff"/>
+      <stop offset="1" stop-color="#ff73c7"/>
+    </linearGradient>
+    <radialGradient id="halo">
+      <stop stop-color="#7be7ff" stop-opacity=".55"/>
+      <stop offset="1" stop-color="#7be7ff" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="soft"><feGaussianBlur stdDeviation="14"/></filter>
+    <filter id="shadow" x="-40%" y="-40%" width="180%" height="180%"><feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#6c7dd8" flood-opacity=".16"/></filter>
+    <pattern id="grid" width="36" height="36" patternUnits="userSpaceOnUse">
+      <path d="M36 0H0V36" fill="none" stroke="#89b8d8" stroke-opacity=".16" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <rect x="28" y="28" width="844" height="644" rx="42" fill="url(#bg)" stroke="#bde9f5"/>
+  <rect x="48" y="48" width="804" height="604" rx="34" fill="url(#grid)"/>
+  <ellipse cx="450" cy="357" rx="300" ry="235" fill="url(#halo)" opacity=".42" filter="url(#soft)"/>
+
+  <g opacity=".92">
+    <path d="M120 540C250 468 330 505 435 450S646 398 782 478" fill="none" stroke="#9fdfff" stroke-width="2" stroke-dasharray="7 12">
+      <animate attributeName="stroke-dashoffset" from="0" to="-76" dur="5s" repeatCount="indefinite"/>
+    </path>
+    <path d="M150 165C270 102 396 138 485 116S676 91 759 162" fill="none" stroke="#c2b8ff" stroke-width="2" stroke-dasharray="5 13">
+      <animate attributeName="stroke-dashoffset" from="0" to="-72" dur="7s" repeatCount="indefinite"/>
+    </path>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="134" y="274" width="194" height="166" rx="28" fill="#ffffff" stroke="#bde8f6"/>
+    <rect x="160" y="303" width="142" height="87" rx="20" fill="#e8f9ff" stroke="#8dddf0"/>
+    <circle cx="231" cy="346" r="29" fill="#ffffff" stroke="#53cde9" stroke-width="6"/>
+    <circle cx="231" cy="346" r="13" fill="url(#cyan)"/>
+    <path d="M231 390V432" stroke="#55cbe8" stroke-width="10" stroke-linecap="round"/>
+    <path d="M194 433H268" stroke="#55cbe8" stroke-width="10" stroke-linecap="round"/>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="367" y="238" width="202" height="276" rx="40" fill="#ffffff" stroke="#c6e8f2"/>
+    <path d="M423 257h90v45c0 23 17 40 30 53 14 14 20 34 20 55v57c0 26-21 47-47 47h-98c-26 0-47-21-47-47v-57c0-21 6-41 20-55 13-13 32-30 32-53z" fill="#edf9ff" stroke="#7dd7ed" stroke-width="3"/>
+    <rect x="436" y="225" width="64" height="36" rx="12" fill="url(#cyan)"/>
+    <path d="M395 388c38-30 113-31 146 7" fill="none" stroke="url(#violet)" stroke-width="8" stroke-linecap="round" opacity=".75"/>
+    <circle cx="469" cy="389" r="48" fill="#76e8ff" fill-opacity=".12" stroke="#55d9ff" stroke-width="2" stroke-dasharray="6 8">
+      <animateTransform attributeName="transform" type="rotate" from="0 469 389" to="360 469 389" dur="8s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="469" cy="389" r="19" fill="#ff79c7" fill-opacity=".25" stroke="#ff63b6"/>
+  </g>
+
+  <g opacity=".95">
+    <rect x="625" y="165" width="144" height="316" rx="28" fill="#ffffff" stroke="#c7d9ff" filter="url(#shadow)"/>
+    <text x="649" y="204" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="700" fill="#5e6c86">NEURAL SIGNAL</text>
+    <g fill="#ffffff" stroke="#6faeff" stroke-width="2">
+      <circle cx="660" cy="258" r="13"/><circle cx="711" cy="235" r="13"/><circle cx="740" cy="288" r="13"/>
+      <circle cx="670" cy="327" r="13"/><circle cx="723" cy="347" r="13"/><circle cx="659" cy="405" r="13"/>
+      <circle cx="732" cy="423" r="13"/>
+    </g>
+    <g stroke="#8abfff" stroke-width="2" stroke-opacity=".7">
+      <path d="M660 258l51-23 29 53-70 39 53 20-64 58 73 18" fill="none"/>
+      <path d="M660 258l63 89M711 235l12 112M740 288l-81 117M670 327l62 96"/>
+    </g>
+    <circle cx="723" cy="347" r="23" fill="none" stroke="#6f63ff" stroke-width="2" stroke-dasharray="5 6">
+      <animate attributeName="r" values="17;27;17" dur="2.8s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values=".9;.3;.9" dur="2.8s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+
+  <g>
+    <rect x="96" y="514" width="708" height="36" rx="18" fill="#dff6fb" stroke="#b8e4ee"/>
+    <rect x="120" y="523" width="660" height="18" rx="9" fill="#ffffff"/>
+    <g fill="#77d3e9"><circle cx="156" cy="532" r="5"/><circle cx="220" cy="532" r="5"/><circle cx="284" cy="532" r="5"/><circle cx="348" cy="532" r="5"/><circle cx="412" cy="532" r="5"/><circle cx="476" cy="532" r="5"/><circle cx="540" cy="532" r="5"/><circle cx="604" cy="532" r="5"/><circle cx="668" cy="532" r="5"/></g>
+  </g>
+
+  <g>
+    <path d="M328 346H366" stroke="#37c9ec" stroke-width="3" stroke-dasharray="5 6">
+      <animate attributeName="stroke-dashoffset" from="0" to="-22" dur="1.3s" repeatCount="indefinite"/>
+    </path>
+    <path d="M569 347H624" stroke="#6f63ff" stroke-width="3" stroke-dasharray="5 6">
+      <animate attributeName="stroke-dashoffset" from="0" to="-22" dur="1.3s" repeatCount="indefinite"/>
+    </path>
+  </g>
+
+  <g>
+    <rect x="348" y="116" width="239" height="44" rx="22" fill="#ffffff" stroke="#a9e3f2"/>
+    <circle cx="374" cy="138" r="7" fill="#26d0a6"><animate attributeName="opacity" values="1;.35;1" dur="1.8s" repeatCount="indefinite"/></circle>
+    <text x="394" y="143" font-family="Inter,Arial,sans-serif" font-size="13" font-weight="800" fill="#3e5b72" letter-spacing="1.5">AI VISION CELL ONLINE</text>
+  </g>
+
+  <g opacity=".65" fill="#64cce7">
+    <circle cx="104" cy="180" r="4"><animate attributeName="cy" values="180;165;180" dur="4s" repeatCount="indefinite"/></circle>
+    <circle cx="803" cy="228" r="5"><animate attributeName="cy" values="228;212;228" dur="5s" repeatCount="indefinite"/></circle>
+    <circle cx="792" cy="588" r="4"><animate attributeName="cx" values="792;810;792" dur="4.5s" repeatCount="indefinite"/></circle>
+  </g>
+</svg>
