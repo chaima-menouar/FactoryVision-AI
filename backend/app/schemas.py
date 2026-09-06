@@ -57,3 +57,21 @@ class CopilotAnswerResponse(BaseModel):
     provider: str
     evidence_total: int
     evidence_anomalous: int
+
+
+class ModelOpsResponse(BaseModel):
+    release_id: str | None = None
+    category: str | None = None
+    model_name: str | None = None
+    checkpoint_sha256: str | None = None
+    quality_gate_status: str
+    release_image_auroc: float | None = Field(default=None, ge=0.0, le=1.0)
+    release_pixel_auroc: float | None = Field(default=None, ge=0.0, le=1.0)
+    mean_image_auroc: float | None = Field(default=None, ge=0.0, le=1.0)
+    mean_pixel_auroc: float | None = Field(default=None, ge=0.0, le=1.0)
+    experiment_tracking: str
+    ci_cd: str
+    infrastructure_as_code: str
+    container_registry: str
+    azure_target: str
+    azure_deployment_state: str
