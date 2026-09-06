@@ -1,0 +1,39 @@
+experiment:
+  name: mvtec_patchcore_baseline
+  seed: 42
+
+data:
+  dataset: mvtec_ad
+  root: /kaggle/input/mvtec-anomaly-detection/mvtec_anomaly_detection
+  categories:
+    - bottle
+    - cable
+    - metal_nut
+    - transistor
+    - zipper
+  image_size: 256
+
+model:
+  family: patchcore
+  backbone: wide_resnet50_2
+  pretrained: true
+
+training:
+  environment: kaggle
+  local_training: false
+  accelerator_preference:
+    - gpu
+    - cpu
+
+metrics:
+  image:
+    - auroc
+    - f1
+  pixel:
+    - auroc
+    - f1
+
+artifacts:
+  export_dir: /kaggle/working/factoryvision-artifacts
+  save_anomaly_maps: true
+  save_checkpoint: true
