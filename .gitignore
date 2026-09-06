@@ -17,6 +17,7 @@ venv/
 *.ckpt
 *.onnx
 artifacts/
+build_artifacts/
 outputs/
 mlruns/
 wandb/
