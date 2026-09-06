@@ -35,3 +35,13 @@ class InspectionHistoryResponse(BaseModel):
     normal: int
     defect_rate: float = Field(ge=0.0, le=1.0)
     items: list[InspectionHistoryItem]
+
+
+class CopilotContextResponse(BaseModel):
+    total: int
+    anomalous: int
+    normal: int
+    defect_rate: float = Field(ge=0.0, le=1.0)
+    average_anomaly_score: float = Field(ge=0.0, le=1.0)
+    recent_anomalies: list[InspectionHistoryItem]
+    suggested_questions: list[str]
