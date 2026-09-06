@@ -1,12 +1,14 @@
-from fastapi import FastAPI, File, UploadFile, HTTPException, Query
+from datetime import datetime, timezone
+from pathlib import Path
+import httpx
+import io
+import os
+
+from fastapi import FastAPI, File, HTTPException, Query, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from PIL import Image
-import httpx
-import io
-import os
-from pathlib import Path
 
 from .schemas import (
     CopilotAnswerResponse,
@@ -31,9 +33,29 @@ def _frontend_dist() -> Path:
     return Path(os.getenv("FACTORYVISION_FRONTEND_DIST", "frontend/dist"))
 
 
+def _safe_positive_int(name: str, default: int) -> int:
+    try:
+        return max(0, int(os.getenv(name, str(default))))
+    except ValueError:
+        return default
+
+
+def _max_upload_bytes() -> int:
+    return _safe_positive_int("FACTORYVISION_MAX_UPLOAD_BYTES", 6 * 1024 * 1024)
+
+
+def _daily_inspection_limit() -> int:
+    return _safe_positive_int("FACTORYVISION_DAILY_INSPECTION_LIMIT", 25)
+
+
+def _utc_day_start_iso() -> str:
+    now = datetime.now(timezone.utc)
+    return now.replace(hour=0, minute=0, second=0, microsecond=0).isoformat()
+
+
 app = FastAPI(
     title="FactoryVision AI API",
-    version="0.8.0",
+    version="0.9.0",
     description="Industrial visual anomaly inspection API.",
 )
 
@@ -106,7 +128,24 @@ async def inspect(file: UploadFile = File(...)) -> InspectionResponse:
     if not file.content_type or not file.content_type.startswith("image/"):
         raise HTTPException(status_code=415, detail="An image file is required.")
 
-    payload = await file.read()
+    daily_limit = _daily_inspection_limit()
+    if daily_limit and store.count_since(_utc_day_start_iso()) >= daily_limit:
+        raise HTTPException(
+            status_code=429,
+            detail=(
+                "The daily inspection limit has been reached. "
+                "Inference is paused to protect the zero-cost deployment budget."
+            ),
+        )
+
+    max_upload_bytes = _max_upload_bytes()
+    payload = await file.read(max_upload_bytes + 1)
+    if len(payload) > max_upload_bytes:
+        raise HTTPException(
+            status_code=413,
+            detail="The uploaded image exceeds the configured size limit.",
+        )
+
     try:
         image = Image.open(io.BytesIO(payload)).convert("RGB")
     except Exception as exc:
