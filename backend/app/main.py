@@ -1,8 +1,11 @@
 from fastapi import FastAPI, File, UploadFile, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from PIL import Image
 import io
 import os
+from pathlib import Path
 
 from .schemas import (
     CopilotContextResponse,
@@ -18,6 +21,10 @@ from .services.quality_context import QualityContextService
 def _cors_origins() -> list[str]:
     raw = os.getenv("FACTORYVISION_CORS_ORIGINS", "http://localhost:5173")
     return [origin.strip() for origin in raw.split(",") if origin.strip()]
+
+
+def _frontend_dist() -> Path:
+    return Path(os.getenv("FACTORYVISION_FRONTEND_DIST", "frontend/dist"))
 
 
 app = FastAPI(
@@ -92,3 +99,17 @@ async def inspect(file: UploadFile = File(...)) -> InspectionResponse:
             "created_at": created_at,
         }
     )
+
+
+frontend_dist = _frontend_dist()
+assets_dir = frontend_dist / "assets"
+if assets_dir.is_dir():
+    app.mount("/assets", StaticFiles(directory=assets_dir), name="frontend-assets")
+
+
+@app.get("/", include_in_schema=False)
+def frontend_index():
+    index_path = frontend_dist / "index.html"
+    if not index_path.is_file():
+        raise HTTPException(status_code=404, detail="Frontend build is not available.")
+    return FileResponse(index_path)
