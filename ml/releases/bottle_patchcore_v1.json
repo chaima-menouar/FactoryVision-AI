@@ -1,0 +1,22 @@
+{
+  "release_id": "bottle-patchcore-v1",
+  "project": "FactoryVision AI",
+  "model_name": "patchcore-wide_resnet50_2",
+  "category": "bottle",
+  "archive_filename": "factoryvision-bottle-patchcore-release.zip",
+  "archive_size_bytes": 231213915,
+  "checkpoint_filename": "model.ckpt",
+  "checkpoint_size_bytes": 231213223,
+  "checkpoint_sha256": "8c1e120c2554d055cf3c9d2779da2dbbd1fd8f022c632c9feab1366528d705db",
+  "created_at_utc": "2026-09-06T09:39:27.939141+00:00",
+  "runtime": {
+    "framework": "Anomalib PatchCore",
+    "backbone": "wide_resnet50_2",
+    "layers": [
+      "layer2",
+      "layer3"
+    ],
+    "coreset_sampling_ratio": 0.1
+  },
+  "storage_policy": "External artifact only. Do not commit the checkpoint or release ZIP to GitHub."
+}
