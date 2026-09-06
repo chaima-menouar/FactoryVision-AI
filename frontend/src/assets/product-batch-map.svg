@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 420">
+  <rect width="720" height="420" fill="#f4f7f9"/>
+  <g opacity=".55" stroke="#d8e0e7" stroke-width="1">
+    <path d="M0 60h720M0 120h720M0 180h720M0 240h720M0 300h720M0 360h720"/>
+    <path d="M80 0v420M160 0v420M240 0v420M320 0v420M400 0v420M480 0v420M560 0v420M640 0v420"/>
+  </g>
+  <g fill="#ffffff" stroke="#8191a0" stroke-width="3">
+    <path d="M90 120h46l8 20v104c0 20-12 31-29 31H90c-17 0-29-11-29-31V140l8-20z"/>
+    <rect x="79" y="92" width="58" height="30" rx="8" fill="#e4ebf0"/>
+    <circle cx="250" cy="202" r="52"/>
+    <circle cx="250" cy="202" r="22" fill="#dce3e9"/>
+    <rect x="365" y="136" width="92" height="116" rx="14"/>
+    <circle cx="411" cy="194" r="23" fill="#dceaf2" stroke="#2e6f95"/>
+    <path d="M540 112h40l8 18v136l-10 16h-36l-10-16V130z"/>
+  </g>
+  <g stroke="#2e6f95" stroke-width="4" stroke-linecap="round">
+    <path d="M82 191h42"/>
+    <path d="M548 155h24M548 181h24M548 207h24M548 233h24"/>
+  </g>
+  <rect x="45" y="72" width="115" height="236" rx="20" fill="none" stroke="#2e6f95" stroke-width="3" stroke-dasharray="10 9" opacity=".65"/>
+  <rect x="190" y="138" width="120" height="128" rx="20" fill="none" stroke="#2f855a" stroke-width="3" stroke-dasharray="10 9" opacity=".45"/>
+  <rect x="344" y="116" width="136" height="158" rx="20" fill="none" stroke="#c67c1a" stroke-width="3" stroke-dasharray="10 9" opacity=".48"/>
+  <rect x="514" y="92" width="96" height="210" rx="20" fill="none" stroke="#2e6f95" stroke-width="3" stroke-dasharray="10 9" opacity=".48"/>
+  <g font-family="Inter,Segoe UI,sans-serif" font-size="12" font-weight="700" fill="#475569">
+    <text x="68" y="335">BOTTLE</text>
+    <text x="221" y="335">METAL NUT</text>
+    <text x="376" y="335">TRANSISTOR</text>
+    <text x="536" y="335">ZIPPER</text>
+  </g>
+</svg>
