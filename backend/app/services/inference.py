@@ -1,10 +1,13 @@
 from __future__ import annotations
 
+import base64
+import io
 import os
 import tempfile
 from pathlib import Path
 from typing import Any
 
+import numpy as np
 from PIL import Image
 
 from ..schemas import InspectionResponse
@@ -66,6 +69,53 @@ class AnomalyInferenceService:
             return value.item()
         return value
 
+    @staticmethod
+    def _tensor_to_array(value: Any) -> np.ndarray | None:
+        if value is None:
+            return None
+        if hasattr(value, "detach"):
+            value = value.detach().cpu()
+        if hasattr(value, "numpy"):
+            value = value.numpy()
+        array = np.asarray(value, dtype=np.float32).squeeze()
+        if array.ndim != 2:
+            return None
+        return array
+
+    @staticmethod
+    def _build_localization_overlay(
+        image: Image.Image,
+        anomaly_map: np.ndarray | None,
+    ) -> str | None:
+        if anomaly_map is None:
+            return None
+
+        finite_map = np.nan_to_num(anomaly_map, nan=0.0, posinf=1.0, neginf=0.0)
+        minimum = float(finite_map.min())
+        maximum = float(finite_map.max())
+
+        if maximum > minimum:
+            normalized = (finite_map - minimum) / (maximum - minimum)
+        else:
+            normalized = np.zeros_like(finite_map)
+
+        height, width = normalized.shape
+        base = image.convert("RGBA").resize((width, height))
+        alpha = np.clip(normalized * 185.0, 0, 185).astype(np.uint8)
+
+        overlay_array = np.zeros((height, width, 4), dtype=np.uint8)
+        overlay_array[..., 0] = 255
+        overlay_array[..., 1] = 45
+        overlay_array[..., 2] = 45
+        overlay_array[..., 3] = alpha
+
+        overlay = Image.fromarray(overlay_array, mode="RGBA")
+        localized = Image.alpha_composite(base, overlay).convert("RGB")
+
+        buffer = io.BytesIO()
+        localized.save(buffer, format="PNG", optimize=True)
+        return base64.b64encode(buffer.getvalue()).decode("ascii")
+
     def predict(self, image: Image.Image, filename: str) -> InspectionResponse:
         if not self.model_ready:
             if self.checkpoint_path.is_file() and self.load_error:
@@ -112,6 +162,13 @@ class AnomalyInferenceService:
                 getattr(prediction, "pred_score", 0.0)
             )
             anomaly_score = float(pred_score or 0.0)
+            anomaly_map = self._tensor_to_array(
+                getattr(prediction, "anomaly_map", None)
+            )
+            localization_base64 = self._build_localization_overlay(
+                image,
+                anomaly_map,
+            )
 
             return InspectionResponse(
                 filename=filename,
@@ -120,6 +177,7 @@ class AnomalyInferenceService:
                 threshold=self.threshold,
                 model_name=self.model_name,
                 model_ready=True,
+                localization_base64=localization_base64,
                 note="Real PatchCore inference from the configured checkpoint.",
             )
         finally:
