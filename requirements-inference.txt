@@ -1,0 +1,6 @@
+-r requirements.txt
+
+# Runtime ML stack for serving the trained PatchCore checkpoint.
+anomalib==2.6.0
+lightning==2.6.5
+timm>=1.0,<2
