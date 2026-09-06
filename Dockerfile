@@ -21,6 +21,9 @@ RUN pip install --no-cache-dir torch==2.10.0 torchvision==0.25.0 --index-url htt
 
 COPY backend/ ./backend/
 COPY scripts/ ./scripts/
+COPY ml/releases/bottle_patchcore_v1.json ./ml/releases/bottle_patchcore_v1.json
+COPY ml/results/patchcore_mvtec_baseline.csv ./ml/results/patchcore_mvtec_baseline.csv
+COPY ml/quality_gate.json ./ml/quality_gate.json
 COPY --from=frontend-build /app/frontend/dist ./frontend/dist
 
 RUN mkdir -p /app/artifacts /app/runtime
