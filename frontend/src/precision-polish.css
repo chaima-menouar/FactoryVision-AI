@@ -1,0 +1,161 @@
+/* FactoryVision AI — Precision Lab polish layer
+   Adds premium depth, hierarchy and restrained motion without changing the teal/graphite identity. */
+
+:root {
+  --pp-line: rgba(143, 190, 186, .14);
+  --pp-line-strong: rgba(143, 190, 186, .24);
+  --pp-surface: rgba(18, 24, 27, .94);
+  --pp-surface-soft: rgba(22, 29, 32, .88);
+  --pp-accent: #91bdb9;
+  --pp-text: #f2f6f5;
+  --pp-muted: #96a4a2;
+}
+
+body { text-rendering: optimizeLegibility; }
+
+.fv-nav {
+  backdrop-filter: blur(18px) saturate(112%);
+  box-shadow: 0 18px 46px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.025);
+}
+.fv-brand-mark {
+  position: relative;
+  overflow: hidden;
+}
+.fv-brand-mark::after {
+  content:"";
+  position:absolute;
+  inset:-45% 38% -45% -25%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.13),transparent);
+  transform:skewX(-18deg) translateX(-170%);
+  animation:ppBrandSweep 8s ease-in-out infinite;
+}
+
+.fv-hero {
+  box-shadow: 0 34px 90px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.018);
+}
+.fv-hero-copy h1 { text-wrap: balance; }
+.fv-hero-copy > p { max-width: 520px; }
+.fv-kicker { opacity: .92; }
+.fv-btn-primary,.fv-nav-cta,.fv-analyze-btn {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(191,219,216,.15);
+}
+.fv-btn-primary::after,.fv-nav-cta::after,.fv-analyze-btn::after {
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(105deg,transparent 25%,rgba(255,255,255,.18) 47%,transparent 68%);
+  transform:translateX(-130%);
+  transition:transform .65s ease;
+}
+.fv-btn-primary:hover::after,.fv-nav-cta:hover::after,.fv-analyze-btn:hover:not(:disabled)::after { transform:translateX(130%); }
+
+/* Precision inspection bay */
+.fv-scanner-scene {
+  isolation:isolate;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.012), inset 0 -80px 100px rgba(0,0,0,.2), 0 24px 55px rgba(0,0,0,.18);
+}
+.fv-scanner-scene::after {
+  content:"INSPECTION CELL  /  LIVE VISION";
+  position:absolute;
+  left:18px;
+  top:16px;
+  z-index:12;
+  color:rgba(159,190,187,.5);
+  font:700 8px/1 ui-monospace,monospace;
+  letter-spacing:.16em;
+}
+.fv-machine-top {
+  background:linear-gradient(180deg,#252d30 0%,#161d20 74%,#111719 100%) !important;
+  border-color:rgba(141,187,183,.17) !important;
+  box-shadow:0 22px 44px rgba(0,0,0,.38),inset 0 1px 0 rgba(255,255,255,.045) !important;
+}
+.fv-lens {
+  box-shadow:0 0 0 1px rgba(144,191,187,.08),0 0 20px rgba(112,165,161,.12),0 20px 36px rgba(0,0,0,.38) !important;
+}
+.fv-scan-cone { opacity:.34 !important; }
+.fv-detect-card {
+  min-width: 190px;
+  border-color: var(--pp-line) !important;
+  box-shadow: 0 16px 34px rgba(0,0,0,.25) !important;
+}
+
+/* Product targets */
+.fv-product-chip {
+  transition:transform .22s ease,border-color .22s ease,background .22s ease !important;
+}
+.fv-product-chip:hover { background:#171f22 !important; }
+.fv-product-chip.is-selected {
+  box-shadow: inset 0 0 0 1px rgba(150,199,195,.035) !important;
+}
+
+/* KPI rail */
+.fv-stats { box-shadow:0 16px 42px rgba(0,0,0,.13); }
+.fv-stat { position:relative; }
+.fv-stat::after {
+  content:"";
+  position:absolute;
+  left:20px;
+  right:20px;
+  bottom:0;
+  height:1px;
+  background:linear-gradient(90deg,transparent,rgba(137,186,182,.12),transparent);
+  opacity:0;
+  transition:opacity .2s ease;
+}
+.fv-stat:hover::after { opacity:1; }
+.fv-stat strong { letter-spacing:-.035em; }
+
+/* Workspace feels like a real QA station */
+.fv-workspace { align-items:stretch; }
+.fv-panel {
+  box-shadow: 0 18px 46px rgba(0,0,0,.15), inset 0 1px 0 rgba(255,255,255,.015) !important;
+}
+.fv-panel-head h2 { letter-spacing:-.03em; }
+.fv-dropzone {
+  position:relative;
+  overflow:hidden;
+  transition:border-color .25s ease,background .25s ease,transform .25s ease;
+}
+.fv-dropzone::before {
+  content:"";
+  position:absolute;
+  left:10%;
+  right:10%;
+  top:-1px;
+  height:1px;
+  background:linear-gradient(90deg,transparent,rgba(144,190,186,.26),transparent);
+}
+.fv-dropzone:hover { transform:translateY(-1px); }
+.fv-example-grid button { transition:.2s ease; }
+.fv-example-grid button:hover { transform:translateY(-1px); border-color:var(--pp-line-strong); }
+
+.fv-awaiting {
+  background:radial-gradient(circle at 50% 44%,rgba(92,148,145,.04),transparent 38%);
+}
+.fv-radar { filter:drop-shadow(0 0 12px rgba(107,164,160,.08)); }
+
+/* Analytics / MLOps */
+.fv-release-card,.fv-pipeline-node,.fv-benchmark-row > div,.fv-history-row {
+  transition:border-color .2s ease,background .2s ease,transform .2s ease;
+}
+.fv-release-card:hover,.fv-pipeline-node:hover,.fv-benchmark-row > div:hover {
+  background:#141c1f !important;
+  border-color:var(--pp-line-strong) !important;
+}
+.fv-pipeline-node:hover { transform:translateY(-1px); }
+.fv-history-row:hover { background:#141c1f !important; }
+
+.fv-footer { padding-bottom:10px; }
+
+@keyframes ppBrandSweep {
+  0%,72%,100%{transform:skewX(-18deg) translateX(-170%)}
+  84%{transform:skewX(-18deg) translateX(330%)}
+}
+
+@media (max-width:720px){
+  .fv-scanner-scene::after{font-size:7px;left:13px;top:13px}
+  .fv-detect-card{min-width:0}
+  .fv-stat::after{display:none}
+}
