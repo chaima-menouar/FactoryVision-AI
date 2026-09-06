@@ -1,0 +1,16 @@
+{
+  "dataset": "MVTec AD",
+  "category": "bottle",
+  "model": "PatchCore",
+  "backbone": "wide_resnet50_2",
+  "environment": "Kaggle",
+  "gpu": "Tesla T4",
+  "metrics": {
+    "image_AUROC": 1.0,
+    "image_F1Score": 0.9919999837875366,
+    "pixel_AUROC": 0.9856019020080566,
+    "pixel_F1Score": 0.7262624502182007
+  },
+  "artifact_location": "/kaggle/working/factoryvision-artifacts/bottle",
+  "note": "Recorded from a real hosted Kaggle training/evaluation run. Large model artifacts are intentionally not committed to GitHub."
+}
